@@ -122,7 +122,7 @@ fn main() -> std::io::Result<()> {
 
                     match res {
                         true => println!("✅ Reward was changed successfully"),
-                        false => println!("❌ Cannot generate a reward"),
+                        false => println!("❌ Cannot change a reward"),
                     }
                 }
             }
@@ -141,7 +141,7 @@ fn main() -> std::io::Result<()> {
 
                     match res {
                         true => println!("✅ Difficulty was changed successfully"),
-                        false => println!("❌ Cannot generate a difficulty"),
+                        false => println!("❌ Cannot change a difficulty"),
                     }
                 }
             }
