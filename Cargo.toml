@@ -1,7 +1,14 @@
 [package]
-name = "blockchain"
+name = "blockchain-cli"
+description = "Provides a command-line interface (CLI) for interacting with blockchain"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+readme = "README.md"
+authors = ["Slavik Pastushenko <slavpas@gmail.com>"]
+keywords = ["cli", "crypto", "blockchain"]
+categories = ["command-line-utilities", "cryptography"]
+repository = "https://github.com/slavik-pastushenko/blockchain-rust"
 
 [dependencies]
 chrono = "0.4.28"
