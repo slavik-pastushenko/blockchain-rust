@@ -4,13 +4,15 @@
 
 [![test](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml/badge.svg)](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml)
 
-Provides a command-line interface (CLI) for interacting with blockchain. It includes:
+Provides a command-line interface (CLI) for interacting with blockchain.
 
-- Create a new blockchain
-- Add a new transaction
+## Features
+
+- Create a blockchain
+- Add a transaction
 - Get a transaction
 - Get all transactions
-- Generate a new block
+- Generate a block
 - Change a reward
 - Change a difficulty
 

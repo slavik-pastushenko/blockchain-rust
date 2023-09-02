@@ -59,6 +59,7 @@ pub struct Block {
     transactions: Vec<Transaction>,
 }
 
+/// A blockchain
 #[derive(Debug, Serialize)]
 pub struct Chain {
     /// A chain of blocks
