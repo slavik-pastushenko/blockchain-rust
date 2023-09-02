@@ -1,0 +1,12 @@
+[package]
+name = "blockchain"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4.28"
+cliclack = "0.1.6"
+serde = { version = "1.0.188", features = ["derive"] }
+serde_derive = "1.0.188"
+serde_json = "1.0.105"
+sha2 = "0.10.7"

@@ -1,0 +1,6 @@
+# https://marketplace.visualstudio.com/items?itemName=jinxdash.prettier-rust
+
+useTabs = false
+tabWidth = 4
+printWidth = 100
+endOfLine = "lf"
