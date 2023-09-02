@@ -1,4 +1,4 @@
-# Blockchain Rust
+# Blockchain CLI
 
 ## Reference implementation
 
