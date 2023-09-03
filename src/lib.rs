@@ -12,70 +12,70 @@ use std::fmt::Write;
 #[derive(Debug, Clone, Serialize)]
 pub struct Transaction {
     /// A transaction hash
-    hash: String,
+    pub hash: String,
 
     /// A transaction sender address
-    from: String,
+    pub from: String,
 
     /// A transaction receiver address
-    to: String,
+    pub to: String,
 
     /// A transaction amount
-    amount: f32,
+    pub amount: f32,
 
     /// A transaction timestamp
-    timestamp: i64,
+    pub timestamp: i64,
 }
 
 /// A identifier of a particular block on an entire blockchain
 #[derive(Debug, Serialize)]
 pub struct BlockHeader {
     /// A timestamp at which a block was mined
-    timestamp: i64,
+    pub timestamp: i64,
 
     /// An integer to achieve the network's difficulty
-    nonce: u32,
+    pub nonce: u32,
 
     /// A hash of a previous block
-    previous_hash: String,
+    pub previous_hash: String,
 
     /// A Merkel root hash
-    merkle: String,
+    pub merkle: String,
 
     /// A current difficulty level of the network
-    difficulty: u32,
+    pub difficulty: u32,
 }
 
 /// A data storage in a blockchain
 #[derive(Debug, Serialize)]
 pub struct Block {
     /// Information about the block and the miner
-    header: BlockHeader,
+    pub header: BlockHeader,
 
     /// A total amount of transactions
-    count: u32,
+    pub count: u32,
 
     /// An amount of transactions
-    transactions: Vec<Transaction>,
+    pub transactions: Vec<Transaction>,
 }
 
 /// A blockchain
 #[derive(Debug, Serialize)]
 pub struct Chain {
     /// A chain of blocks
-    chain: Vec<Block>,
+    pub chain: Vec<Block>,
 
     /// A list of transactions
-    current_transactions: Vec<Transaction>,
+    pub current_transactions: Vec<Transaction>,
 
     /// A current difficulty level of the network
-    difficulty: u32,
+    pub difficulty: u32,
 
     /// A blockchain genesis address
-    address: String,
+    pub address: String,
 
     /// A block reward
-    reward: f32,
+    pub reward: f32,
 }
 
 impl Chain {
