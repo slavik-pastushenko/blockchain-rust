@@ -79,13 +79,13 @@ pub struct Chain {
 }
 
 impl Chain {
-    pub fn new(address: String, difficulty: u32) -> Chain {
+    pub fn new(address: String, difficulty: u32, reward: f32) -> Chain {
         let mut chain = Chain {
+            reward,
+            address,
+            difficulty,
             chain: Vec::new(),
             current_transactions: Vec::new(),
-            difficulty,
-            address,
-            reward: 100.0,
         };
 
         chain.generate_new_block();
@@ -180,7 +180,7 @@ impl Chain {
         true
     }
 
-    fn get_merkle(transactions: Vec<Transaction>) -> String {
+    pub fn get_merkle(transactions: Vec<Transaction>) -> String {
         let mut merkle = Vec::new();
 
         for t in &transactions {
@@ -215,8 +215,6 @@ impl Chain {
                     if val != 0 {
                         header.nonce += 1;
                     } else {
-                        println!("Block hash: {:?}", hash);
-
                         break;
                     }
                 }
@@ -251,7 +249,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Chain {
-        Chain::new("Address".to_string(), 1)
+        Chain::new("Address".to_string(), 1, 100.0)
     }
 
     #[test]

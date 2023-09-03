@@ -18,7 +18,7 @@ Provides a command-line interface (CLI) for interacting with blockchain.
 - Change a reward
 - Change a difficulty
 
-![](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/d470ac1c-1533-4fe6-b518-29588eb53cc6)
+![](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/f9f15dbf-8594-4a1c-9d7a-675567a205da)
 
 ## Contributing
 

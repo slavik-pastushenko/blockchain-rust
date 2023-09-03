@@ -1,6 +1,6 @@
 use cliclack::spinner;
 
-mod blockchain;
+use blockchain::Chain;
 
 fn main() -> std::io::Result<()> {
     cliclack::clear_screen()?;
@@ -20,10 +20,18 @@ fn main() -> std::io::Result<()> {
         })
         .interact()?;
 
+    let reward: f32 = cliclack
+        ::input("Reward")
+        .default_input("100.0")
+        .validate(|input: &String| {
+            if input.is_empty() { Err("Please enter a reward") } else { Ok(()) }
+        })
+        .interact()?;
+
     let mut spinner = spinner();
     spinner.start("Generating a genesis block...");
 
-    let mut chain = blockchain::Chain::new(address.trim().to_string(), difficulty);
+    let mut chain = Chain::new(address.trim().to_string(), difficulty, reward);
 
     spinner.stop("✅ Blockchain was created successfully");
 

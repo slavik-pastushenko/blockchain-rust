@@ -1,7 +1,7 @@
 [package]
 name = "blockchain-cli"
 description = "Provides a command-line interface (CLI) for interacting with blockchain"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 readme = "README.md"
@@ -11,6 +11,14 @@ exclude = [".prettierrc.toml", ".github/**"]
 categories = ["command-line-utilities", "cryptography"]
 documentation = "https://docs.rs/crate/blockchain-cli/0.1.0"
 repository = "https://github.com/slavik-pastushenko/blockchain-rust"
+
+[lib]
+name = "blockchain"
+path = "src/lib.rs"
+
+[[bin]]
+name = "blockchain-prompts"
+path = "src/bin/blockchain.rs"
 
 [dependencies]
 chrono = "0.4.28"
