@@ -5,7 +5,7 @@
 [![test](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml/badge.svg)](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml)
 [![docs](https://docs.rs/blockchain-cli/badge.svg)](https://docs.rs/blockchain-cli)
 [![crate](https://img.shields.io/crates/v/blockchain-cli.svg)](https://crates.io/crates/blockchain-cli)
-![rustc 1.0](https://img.shields.io/badge/rustc-1.0+-red.svg)
+![Crates.io (recent)](https://img.shields.io/crates/dr/blockchain-cli)
 ![GitHub issues](https://img.shields.io/github/issues/slavik-pastushenko/blockchain-rust)
 ![GitHub](https://img.shields.io/github/license/slavik-pastushenko/blockchain-rust)
 
