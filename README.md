@@ -89,6 +89,12 @@ cargo test
 cargo run
 ```
 
+- Run [clippy](https://github.com/rust-lang/rust-clippy):
+
+```bash
+cargo clippy --all-targets --all-features -- -D warnings
+```
+
 - Generate documentation in HTML format:
 
 ```bash

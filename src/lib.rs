@@ -1,7 +1,4 @@
-extern crate chrono;
-extern crate serde;
-extern crate serde_json;
-extern crate sha2;
+#![forbid(unsafe_code)]
 
 use chrono::Utc;
 use serde_derive::Serialize;
@@ -53,7 +50,7 @@ pub struct Block {
     pub header: BlockHeader,
 
     /// A total amount of transactions
-    pub count: u32,
+    pub count: usize,
 
     /// An amount of transactions
     pub transactions: Vec<Transaction>,
@@ -79,7 +76,8 @@ pub struct Chain {
 }
 
 impl Chain {
-    pub fn new(address: String, difficulty: u32, reward: f32) -> Chain {
+    /// Initialize an empty chain and empty current transactions, and generates the genesis block
+    pub fn new(address: String, difficulty: u32, reward: f32) -> Self {
         let mut chain = Chain {
             reward,
             address,
@@ -93,14 +91,17 @@ impl Chain {
         chain
     }
 
+    /// Get a list of current transactions in the blockchain
     pub fn get_transactions(&mut self) -> &Vec<Transaction> {
         &self.current_transactions
     }
 
+    /// Get a transaction by hash
     pub fn get_transaction(&self, hash: String) -> Option<&Transaction> {
         self.current_transactions.iter().find(|&trx| trx.hash == hash)
     }
 
+    /// Add a new transaction to the blockchain
     pub fn add_transaction(&mut self, from: String, to: String, amount: f32) -> bool {
         let timestamp = Utc::now().timestamp();
         let hash = Chain::hash(&(&from, &to, amount, timestamp));
@@ -116,6 +117,7 @@ impl Chain {
         true
     }
 
+    /// Get a hash of the last block in the blockchain
     pub fn get_last_hash(&self) -> String {
         let block = match self.chain.last() {
             Some(block) => block,
@@ -127,18 +129,21 @@ impl Chain {
         Chain::hash(&block.header)
     }
 
+    /// Update the mining difficulty of the blockchain
     pub fn update_difficulty(&mut self, difficulty: u32) -> bool {
         self.difficulty = difficulty;
 
         true
     }
 
+    /// Update the block reward
     pub fn update_reward(&mut self, reward: f32) -> bool {
         self.reward = reward;
 
         true
     }
 
+    /// Generate a new block and appends it to the blockchain
     pub fn generate_new_block(&mut self) -> bool {
         let header = BlockHeader {
             timestamp: Utc::now().timestamp(),
@@ -170,7 +175,7 @@ impl Chain {
         block.transactions.push(reward_trans);
         block.transactions.append(&mut self.current_transactions);
 
-        block.count = block.transactions.len() as u32;
+        block.count = block.transactions.len();
         block.header.merkle = Chain::get_merkle(block.transactions.clone());
 
         Chain::proof_of_work(&mut block.header);
@@ -180,6 +185,7 @@ impl Chain {
         true
     }
 
+    /// Calculate the Merkle root hash for a list of transactions
     pub fn get_merkle(transactions: Vec<Transaction>) -> String {
         let mut merkle = Vec::new();
 
@@ -195,16 +201,18 @@ impl Chain {
 
         while merkle.len() > 1 {
             let mut h1 = merkle.remove(0);
-            let mut h2 = merkle.remove(0);
+            let h2 = merkle.remove(0);
 
-            h1.push_str(&mut h2);
+            h1.push_str(&h2);
 
             let nh = Chain::hash(&h1);
             merkle.push(nh);
         }
+
         merkle.pop().unwrap()
     }
 
+    /// Perform the proof-of-work process to mine a block
     pub fn proof_of_work(header: &mut BlockHeader) {
         loop {
             let hash = Chain::hash(header);
@@ -227,6 +235,7 @@ impl Chain {
         }
     }
 
+    /// Calculate the SHA-256 hash
     pub fn hash<T: serde::Serialize>(item: &T) -> String {
         let input = serde_json::to_string(&item).unwrap();
         let mut hasher = Sha256::new();
@@ -258,7 +267,7 @@ mod tests {
 
         let result = chain.add_transaction("Sender".to_string(), "Receiver".to_string(), 10.0);
 
-        assert_eq!(result, true);
+        assert!(result);
         assert_eq!(chain.current_transactions.len(), 1);
     }
 
@@ -303,7 +312,7 @@ mod tests {
 
         let transactions = chain.get_transactions();
 
-        assert_eq!(transactions.len(), 0);
+        assert!(transactions.is_empty());
     }
 
     #[test]
@@ -320,7 +329,7 @@ mod tests {
 
         let result = chain.update_difficulty(4);
 
-        assert_eq!(result, true);
+        assert!(result);
         assert_eq!(chain.difficulty, 4);
     }
 
@@ -330,7 +339,7 @@ mod tests {
 
         let result = chain.update_reward(50.0);
 
-        assert_eq!(result, true);
+        assert!(result);
         assert_eq!(chain.reward, 50.0);
     }
 
@@ -340,7 +349,7 @@ mod tests {
 
         let result = chain.generate_new_block();
 
-        assert_eq!(result, true);
+        assert!(result);
         assert_eq!(chain.chain.len(), 2);
     }
 }
