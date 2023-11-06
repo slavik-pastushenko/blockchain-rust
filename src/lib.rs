@@ -76,7 +76,15 @@ pub struct Chain {
 }
 
 impl Chain {
-    /// Initialize an empty chain and empty current transactions, and generates the genesis block
+    /// Initialize a new blockchain with the specified parameters.
+    ///
+    /// # Arguments
+    /// - `address`: The address associated with the blockchain.
+    /// - `difficulty`: The initial mining difficulty level of the network.
+    /// - `reward`: The initial block reward for miners.
+    ///
+    /// # Returns
+    /// A new `Chain` instance with the given parameters and a genesis block.
     pub fn new(address: String, difficulty: u32, reward: f32) -> Self {
         let mut chain = Chain {
             reward,
@@ -91,17 +99,34 @@ impl Chain {
         chain
     }
 
-    /// Get a list of current transactions in the blockchain
+    /// Get a list of current transactions in the blockchain.
+    ///
+    /// # Returns
+    /// A reference to a vector containing the current transactions.
     pub fn get_transactions(&mut self) -> &Vec<Transaction> {
         &self.current_transactions
     }
 
-    /// Get a transaction by hash
+    /// Get a transaction by its hash.
+    ///
+    /// # Arguments
+    /// - `hash`: The hash of the transaction to retrieve.
+    ///
+    /// # Returns
+    /// An option containing a reference to the transaction if found, or `None` if not found.
     pub fn get_transaction(&self, hash: String) -> Option<&Transaction> {
         self.current_transactions.iter().find(|&trx| trx.hash == hash)
     }
 
-    /// Add a new transaction to the blockchain
+    /// Add a new transaction to the blockchain.
+    ///
+    /// # Arguments
+    /// - `from`: The sender's address.
+    /// - `to`: The receiver's address.
+    /// - `amount`: The amount of the transaction.
+    ///
+    /// # Returns
+    /// `true` if the transaction is successfully added to the current transactions.
     pub fn add_transaction(&mut self, from: String, to: String, amount: f32) -> bool {
         let timestamp = Utc::now().timestamp();
         let hash = Chain::hash(&(&from, &to, amount, timestamp));
@@ -117,7 +142,10 @@ impl Chain {
         true
     }
 
-    /// Get a hash of the last block in the blockchain
+    /// Get the hash of the last block in the blockchain.
+    ///
+    /// # Returns
+    /// The hash of the last block in the blockchain as a string.
     pub fn get_last_hash(&self) -> String {
         let block = match self.chain.last() {
             Some(block) => block,
@@ -129,21 +157,36 @@ impl Chain {
         Chain::hash(&block.header)
     }
 
-    /// Update the mining difficulty of the blockchain
+    /// Update the mining difficulty of the blockchain.
+    ///
+    /// # Arguments
+    /// - `difficulty`: The new mining difficulty level.
+    ///
+    /// # Returns
+    /// `true` if the difficulty is successfully updated.
     pub fn update_difficulty(&mut self, difficulty: u32) -> bool {
         self.difficulty = difficulty;
 
         true
     }
 
-    /// Update the block reward
+    /// Update the block reward.
+    ///
+    /// # Arguments
+    /// - `reward`: The new block reward value.
+    ///
+    /// # Returns
+    /// `true` if the reward is successfully updated.
     pub fn update_reward(&mut self, reward: f32) -> bool {
         self.reward = reward;
 
         true
     }
 
-    /// Generate a new block and appends it to the blockchain
+    /// Generate a new block and append it to the blockchain.
+    ///
+    /// # Returns
+    /// `true` if a new block is successfully generated and added to the blockchain.
     pub fn generate_new_block(&mut self) -> bool {
         let header = BlockHeader {
             timestamp: Utc::now().timestamp(),
@@ -185,7 +228,13 @@ impl Chain {
         true
     }
 
-    /// Calculate the Merkle root hash for a list of transactions
+    /// Calculate the Merkle root hash for a list of transactions.
+    ///
+    /// # Arguments
+    /// - `transactions`: A vector of transactions for which the Merkle root hash is calculated.
+    ///
+    /// # Returns
+    /// The Merkle root hash as a string.
     pub fn get_merkle(transactions: Vec<Transaction>) -> String {
         let mut merkle = Vec::new();
 
@@ -212,7 +261,10 @@ impl Chain {
         merkle.pop().unwrap()
     }
 
-    /// Perform the proof-of-work process to mine a block
+    /// Perform the proof-of-work process to mine a block.
+    ///
+    /// # Arguments
+    /// - `header`: A mutable reference to the block header to be mined.
     pub fn proof_of_work(header: &mut BlockHeader) {
         loop {
             let hash = Chain::hash(header);
@@ -235,7 +287,13 @@ impl Chain {
         }
     }
 
-    /// Calculate the SHA-256 hash
+    /// Calculate the SHA-256 hash of a serializable item.
+    ///
+    /// # Arguments
+    /// - `item`: A serializable item to be hashed.
+    ///
+    /// # Returns
+    /// The SHA-256 hash of the item as a string.
     pub fn hash<T: serde::Serialize>(item: &T) -> String {
         let input = serde_json::to_string(&item).unwrap();
         let mut hasher = Sha256::new();

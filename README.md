@@ -1,25 +1,42 @@
 # Blockchain CLI
 
+A Rust library provides a command-line interface (CLI) for interacting with blockchain.
+
 ## Reference implementation
 
 [![test](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml/badge.svg)](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml)
 [![docs](https://docs.rs/blockchain-cli/badge.svg)](https://docs.rs/blockchain-cli)
 [![crate](https://img.shields.io/crates/v/blockchain-cli.svg)](https://crates.io/crates/blockchain-cli)
 ![Crates.io (recent)](https://img.shields.io/crates/dr/blockchain-cli)
-![GitHub issues](https://img.shields.io/github/issues/slavik-pastushenko/blockchain-rust)
 ![GitHub](https://img.shields.io/github/license/slavik-pastushenko/blockchain-rust)
 
-A Rust library provides a command-line interface (CLI) for interacting with blockchain.
+![Features](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/f9f15dbf-8594-4a1c-9d7a-675567a205da)
 
 ## Features
 
-- Create a blockchain
-- Add a transaction
-- Get a transaction
-- Get all transactions
-- Generate a block
-- Change a reward
-- Change a difficulty
+- `new(address, difficulty, reward)`: Initialize a new blockchain with the specified parameters.
+- `get_transactions()`: Get a list of current transactions in the blockchain.
+- `get_transaction(hash)`: Get a transaction by its hash.
+- `add_transaction(from, to, amount)`: Add a new transaction to the blockchain.
+- `get_last_hash()`: Get the hash of the last block in the blockchain.
+- `update_difficulty(difficulty)`: Update the mining difficulty of the blockchain.
+- `update_reward(reward)`: Update the block reward.
+- `generate_new_block()`: Generate a new block and append it to the blockchain.
+- `get_merkle(transactions)`: Calculate the Merkle root hash for a list of transactions.
+- `proof_of_work(header)`: Perform the proof-of-work process to mine a block.
+- `hash(item)`: Calculate the SHA-256 hash of a serializable item.
+
+## Options
+
+| Option       | Description                                                       |
+|--------------|-------------------------------------------------------------------|
+| `address`    | The address associated with the blockchain.                       |
+| `difficulty` | The initial mining difficulty level of the network.               |
+| `reward`     | The initial block reward for miners.                              |
+
+## Safety
+
+This crate uses `#![forbid(unsafe_code)]` to ensure everything is implemented in 100% safe Rust.
 
 ## Usage
 
@@ -28,8 +45,6 @@ Run the following Cargo command in your project directory::
 ```bash
 cargo add blockchain-cli
 ```
-
-![Usage](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/f9f15dbf-8594-4a1c-9d7a-675567a205da)
 
 ```rust
 extern crate blockchain;

@@ -1,15 +1,16 @@
 [package]
 name = "blockchain-cli"
 description = "Provides a command-line interface (CLI) for interacting with blockchain"
-version = "0.1.7"
+version = "1.0.0"
 edition = "2021"
 license = "MIT"
+license-file = "LICENSE"
 readme = "README.md"
 authors = ["Slavik Pastushenko <slavpas@gmail.com>"]
 keywords = ["cli", "crypto", "blockchain"]
 exclude = [".prettierrc.toml", ".github/**"]
 categories = ["command-line-utilities", "cryptography"]
-documentation = "https://docs.rs/blockchain-cli/0.1.7"
+documentation = "https://docs.rs/blockchain-cli/1.0.0"
 repository = "https://github.com/slavik-pastushenko/blockchain-rust"
 
 [lib]
