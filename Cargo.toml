@@ -4,7 +4,6 @@ description = "Provides a command-line interface (CLI) for interacting with bloc
 version = "1.0.0"
 edition = "2021"
 license = "MIT"
-license-file = "LICENSE"
 readme = "README.md"
 authors = ["Slavik Pastushenko <slavpas@gmail.com>"]
 keywords = ["cli", "crypto", "blockchain"]

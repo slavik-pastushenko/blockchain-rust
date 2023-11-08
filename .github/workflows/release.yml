@@ -24,7 +24,7 @@ jobs:
     - name: Bump version and create GitHub release
       run: |
         # Bump the version and create a GitHub release
-        cargo release
+        cargo release patch
 
         # Get the version number from Cargo.toml
         VERSION=$(grep -oP 'version = "\K[^"]+' Cargo.toml)
