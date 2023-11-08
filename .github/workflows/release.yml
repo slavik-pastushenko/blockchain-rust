@@ -25,6 +25,7 @@ jobs:
       env:
         CRATE_NAME: blockchain-cli
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
       run: |
         # Set
         git config --global user.email "slavpas@gmail.com"
