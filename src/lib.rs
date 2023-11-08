@@ -2,7 +2,7 @@
 
 use chrono::Utc;
 use serde_derive::Serialize;
-use sha2::{ Sha256, Digest };
+use sha2::{Digest, Sha256};
 use std::fmt::Write;
 
 /// An exchange of assets between two parties
@@ -115,7 +115,9 @@ impl Chain {
     /// # Returns
     /// An option containing a reference to the transaction if found, or `None` if not found.
     pub fn get_transaction(&self, hash: String) -> Option<&Transaction> {
-        self.current_transactions.iter().find(|&trx| trx.hash == hash)
+        self.current_transactions
+            .iter()
+            .find(|&trx| trx.hash == hash)
     }
 
     /// Add a new transaction to the blockchain.

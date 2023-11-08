@@ -10,7 +10,7 @@ authors = ["Slavik Pastushenko <slavpas@gmail.com>"]
 keywords = ["cli", "crypto", "blockchain"]
 exclude = [".prettierrc.toml", ".github/**"]
 categories = ["command-line-utilities", "cryptography"]
-documentation = "https://docs.rs/blockchain-cli/1.0.0"
+documentation = "https://docs.rs/blockchain-cli"
 repository = "https://github.com/slavik-pastushenko/blockchain-rust"
 
 [lib]

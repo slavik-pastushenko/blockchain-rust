@@ -5,26 +5,35 @@ use blockchain::Chain;
 fn main() -> std::io::Result<()> {
     cliclack::clear_screen()?;
 
-    let address: String = cliclack
-        ::input("Address")
+    let address: String = cliclack::input("Address")
         .validate(|input: &String| {
-            if input.is_empty() { Err("Please enter an address") } else { Ok(()) }
+            if input.is_empty() {
+                Err("Please enter an address")
+            } else {
+                Ok(())
+            }
         })
         .interact()?;
 
-    let difficulty: u32 = cliclack
-        ::input("Difficulty")
+    let difficulty: u32 = cliclack::input("Difficulty")
         .default_input("2")
         .validate(|input: &String| {
-            if input.is_empty() { Err("Please enter a difficulty") } else { Ok(()) }
+            if input.is_empty() {
+                Err("Please enter a difficulty")
+            } else {
+                Ok(())
+            }
         })
         .interact()?;
 
-    let reward: f32 = cliclack
-        ::input("Reward")
+    let reward: f32 = cliclack::input("Reward")
         .default_input("100.0")
         .validate(|input: &String| {
-            if input.is_empty() { Err("Please enter a reward") } else { Ok(()) }
+            if input.is_empty() {
+                Err("Please enter a reward")
+            } else {
+                Ok(())
+            }
         })
         .interact()?;
 
@@ -36,8 +45,7 @@ fn main() -> std::io::Result<()> {
     spinner.stop("✅ Blockchain was created successfully");
 
     loop {
-        let action = cliclack
-            ::select("💡 Select an action")
+        let action = cliclack::select("💡 Select an action")
             .initial_value("add_transaction")
             .item("add_transaction", "Add a new transaction", "")
             .item("get_transaction", "Get a transaction", "")
@@ -50,24 +58,33 @@ fn main() -> std::io::Result<()> {
 
         match action {
             "add_transaction" => {
-                let sender: String = cliclack
-                    ::input("Sender")
+                let sender: String = cliclack::input("Sender")
                     .validate(|input: &String| {
-                        if input.is_empty() { Err("Please enter a sender") } else { Ok(()) }
+                        if input.is_empty() {
+                            Err("Please enter a sender")
+                        } else {
+                            Ok(())
+                        }
                     })
                     .interact()?;
 
-                let receiver: String = cliclack
-                    ::input("Receiver")
+                let receiver: String = cliclack::input("Receiver")
                     .validate(|input: &String| {
-                        if input.is_empty() { Err("Please enter a receiver") } else { Ok(()) }
+                        if input.is_empty() {
+                            Err("Please enter a receiver")
+                        } else {
+                            Ok(())
+                        }
                     })
                     .interact()?;
 
-                let amount: f32 = cliclack
-                    ::input("Amount")
+                let amount: f32 = cliclack::input("Amount")
                     .validate(|input: &String| {
-                        if input.is_empty() { Err("Please enter an amount") } else { Ok(()) }
+                        if input.is_empty() {
+                            Err("Please enter an amount")
+                        } else {
+                            Ok(())
+                        }
                     })
                     .interact()?;
 
@@ -77,7 +94,7 @@ fn main() -> std::io::Result<()> {
                     let res = chain.add_transaction(
                         sender.trim().to_string(),
                         receiver.trim().to_string(),
-                        amount
+                        amount,
                     );
 
                     match res {
@@ -87,8 +104,7 @@ fn main() -> std::io::Result<()> {
                 }
             }
             "get_transaction" => {
-                let hash: String = cliclack
-                    ::input("Transaction hash")
+                let hash: String = cliclack::input("Transaction hash")
                     .validate(|input: &String| {
                         if input.is_empty() {
                             Err("Please enter a transaction hash")
@@ -116,10 +132,13 @@ fn main() -> std::io::Result<()> {
                 }
             }
             "change_reward" => {
-                let new_reward: String = cliclack
-                    ::input("New reward")
+                let new_reward: String = cliclack::input("New reward")
                     .validate(|input: &String| {
-                        if input.is_empty() { Err("Please enter a new reward") } else { Ok(()) }
+                        if input.is_empty() {
+                            Err("Please enter a new reward")
+                        } else {
+                            Ok(())
+                        }
                     })
                     .interact()?;
 
@@ -135,10 +154,13 @@ fn main() -> std::io::Result<()> {
                 }
             }
             "change_difficulty" => {
-                let new_difficulty: u32 = cliclack
-                    ::input("New difficulty")
+                let new_difficulty: u32 = cliclack::input("New difficulty")
                     .validate(|input: &String| {
-                        if input.is_empty() { Err("Please enter a new difficulty") } else { Ok(()) }
+                        if input.is_empty() {
+                            Err("Please enter a new difficulty")
+                        } else {
+                            Ok(())
+                        }
                     })
                     .interact()?;
 
