@@ -28,20 +28,16 @@ jobs:
     - name: Install cargo-release
       run: cargo install cargo-release
 
-    - name: Bump version and create GitHub release
+    - name: Create GitHub release & Publish to crates.io
       env:
         CRATE_NAME: blockchain-cli
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Bump the version and create a GitHub release
-        cargo release patch
+        cargo release --execute patch
 
         # Get the version number from Cargo.toml
         VERSION=$(grep -oP 'version = "\K[^"]+' Cargo.toml)
 
         # Create a GitHub release using the GitHub CLI
-        gh release create "v$VERSION" target/package/blockchain-cli-*.crate -t "v$VERSION"
-
-    - name: Publish to crates.io
-      env:
-        CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
-      run: cargo publish
+        gh release create v$VERSION target/package/blockchain-cli-*.crate -t "v$VERSION"
