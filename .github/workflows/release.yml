@@ -5,42 +5,12 @@ permissions:
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v[0-9]+.*
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Rust
-      uses: ATiltedTree/setup-rust@v1
-      with:
-        rust-version: stable
-
-    - name: Install cargo-release
-      run: cargo install cargo-release
-
-    - name: Publish to crates.io
-      env:
-        CRATE_NAME: blockchain-cli
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-      run: |
-        # Set config
-        git config --global user.email "slavpas@gmail.com"
-        git config --global user.name "Slavik Pastushenko"
-
-        # Release
-        # cargo release --execute --no-confirm --no-verify patch
-        cargo release --no-publish --no-confirm --no-verify patch
-
   release:
     runs-on: ubuntu-latest
-    needs: [ publish ]
     steps:
       - uses: actions/checkout@v4
       - uses: taiki-e/create-gh-release-action@v1
