@@ -18,10 +18,19 @@ jobs:
       with:
         rust-version: stable
 
+    - name: Set up GitHub CLI
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Configure GitHub CLI with the provided token
+        gh config set -h github.com token $GH_TOKEN
+
     - name: Install cargo-release
       run: cargo install cargo-release
 
     - name: Bump version and create GitHub release
+      env:
+        CRATE_NAME: blockchain-cli
       run: |
         # Bump the version and create a GitHub release
         cargo release patch
@@ -31,10 +40,8 @@ jobs:
 
         # Create a GitHub release using the GitHub CLI
         gh release create "v$VERSION" target/package/blockchain-cli-*.crate -t "v$VERSION"
-      env:
-        CRATE_NAME: blockchain-cli
 
     - name: Publish to crates.io
-      run: cargo publish
       env:
         CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+      run: cargo publish
