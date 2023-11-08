@@ -30,9 +30,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
       run: |
-        # Set
+        # Set config
         git config --global user.email "slavpas@gmail.com"
         git config --global user.name "Slavik Pastushenko"
 
-        # Bump the version and create a GitHub release
-        cargo release --execute --no-confirm patch
+        # Release
+        cargo release --execute --no-confirm --push-remote origin/main patch
