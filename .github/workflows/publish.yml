@@ -35,4 +35,4 @@ jobs:
         git config --global user.name "Slavik Pastushenko"
 
         # Release
-        cargo release --execute --no-confirm --push-remote origin/main patch
+        cargo release --execute --no-confirm --no-verify patch
