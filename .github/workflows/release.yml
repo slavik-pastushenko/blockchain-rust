@@ -18,13 +18,6 @@ jobs:
       with:
         rust-version: stable
 
-    - name: Set up GitHub CLI
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        # Configure GitHub CLI with the provided token
-        gh config set -h github.com token $GH_TOKEN
-
     - name: Install cargo-release
       run: cargo install cargo-release
 
@@ -33,6 +26,10 @@ jobs:
         CRATE_NAME: blockchain-cli
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        # Set
+        git config --global user.email "slavpas@gmail.com"
+        git config --global user.name "Slavik Pastushenko"
+
         # Bump the version and create a GitHub release
         cargo release --execute --no-confirm patch
 
