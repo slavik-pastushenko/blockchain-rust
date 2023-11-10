@@ -9,6 +9,7 @@ A Rust library provides a command-line interface (CLI) for interacting with bloc
 [![docs](https://docs.rs/blockchain-cli/badge.svg)](https://docs.rs/blockchain-cli)
 [![crate](https://img.shields.io/crates/v/blockchain-cli.svg)](https://crates.io/crates/blockchain-cli)
 ![Crates.io (recent)](https://img.shields.io/crates/dr/blockchain-cli)
+[![codecov](https://codecov.io/gh/slavik-pastushenko/blockchain-rust/graph/badge.svg?token=9EL0F6725A)](https://codecov.io/gh/slavik-pastushenko/blockchain-rust)
 
 ![Features](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/f9f15dbf-8594-4a1c-9d7a-675567a205da)
 
