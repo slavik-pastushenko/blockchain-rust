@@ -21,9 +21,9 @@ name = "blockchain-prompts"
 path = "src/bin/blockchain.rs"
 
 [dependencies]
-chrono = "0.4.28"
-cliclack = "0.1.6"
-serde = { version = "1.0.188", features = ["derive"] }
-serde_derive = "1.0.188"
-serde_json = "1.0.105"
-sha2 = "0.10.7"
+chrono = "0.4.31"
+cliclack = "0.1.9"
+serde = { version = "1.0.192", features = ["derive"] }
+serde_derive = "1.0.192"
+serde_json = "1.0.108"
+sha2 = "0.10.8"

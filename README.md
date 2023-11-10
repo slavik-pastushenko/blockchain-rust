@@ -5,7 +5,7 @@ A Rust library provides a command-line interface (CLI) for interacting with bloc
 ## Reference implementation
 
 [![test](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml/badge.svg)](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/test.yml)
-[![release](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/release.yml/badge.svg)](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/release.yml)
+[![release](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/release.yml/badge.svg?event=workflow_dispatch)](https://github.com/slavik-pastushenko/blockchain-rust/actions/workflows/release.yml)
 [![docs](https://docs.rs/blockchain-cli/badge.svg)](https://docs.rs/blockchain-cli)
 [![crate](https://img.shields.io/crates/v/blockchain-cli.svg)](https://crates.io/crates/blockchain-cli)
 ![Crates.io (recent)](https://img.shields.io/crates/dr/blockchain-cli)
