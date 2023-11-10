@@ -10,6 +10,19 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: cargo build --verbose
+    - name: Run clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings
+    - name: Run lint
+      run: cargo fmt -- --check
+
   test:
     env:
       PROJECT_NAME_UNDERSCORE: blockhain_cli
@@ -39,10 +52,6 @@ jobs:
           ~/.cargo/registry/cache
           target
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
-    - name: Run clippy
-      run: cargo clippy --all-targets --all-features -- -D warnings
-    - name: Run lint
-      run: cargo fmt -- --check
     - name: Run tests with the coverage report
       run: |
         cargo install cargo2junit grcov;
