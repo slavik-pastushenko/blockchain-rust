@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Install tarpaulin
+      run: cargo install cargo-tarpaulin
     - name: Build
       run: cargo build --verbose
     - name: Run clippy
@@ -23,4 +25,10 @@ jobs:
     - name: Run lint
       run: cargo fmt -- --check
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo tarpaulin --lib --out xml
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        file: ./cobertura.xml
