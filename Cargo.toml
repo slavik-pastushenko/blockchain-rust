@@ -20,6 +20,9 @@ path = "src/lib.rs"
 name = "blockchain-prompts"
 path = "src/bin/blockchain.rs"
 
+[features]
+coverage = []
+
 [dependencies]
 chrono = "0.4.31"
 cliclack = "0.1.9"
