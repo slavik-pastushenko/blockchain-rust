@@ -18,7 +18,7 @@ pub struct Transaction {
     pub to: String,
 
     /// Transaction amount
-    pub amount: f32,
+    pub amount: f64,
 
     /// Transaction timestamp
     pub timestamp: i64,
@@ -40,7 +40,7 @@ pub struct BlockHeader {
     pub merkle: String,
 
     /// Current difficulty level of the network
-    pub difficulty: u32,
+    pub difficulty: f64,
 }
 
 /// Data storage in a blockchain
@@ -66,16 +66,16 @@ pub struct Chain {
     pub current_transactions: Vec<Transaction>,
 
     /// Current difficulty level of the network
-    pub difficulty: u32,
+    pub difficulty: f64,
 
     /// Blockchain genesis address
     pub address: String,
 
     /// Block reward
-    pub reward: f32,
+    pub reward: f64,
 
     /// Transaction fee
-    pub fee: f32,
+    pub fee: f64,
 }
 
 impl Chain {
@@ -89,7 +89,7 @@ impl Chain {
     ///
     /// # Returns
     /// A new `Chain` instance with the given parameters and a genesis block.
-    pub fn new(address: String, difficulty: u32, reward: f32, fee: f32) -> Self {
+    pub fn new(address: String, difficulty: f64, reward: f64, fee: f64) -> Self {
         let mut chain = Chain {
             fee,
             reward,
@@ -134,7 +134,7 @@ impl Chain {
     ///
     /// # Returns
     /// `true` if the transaction is successfully added to the current transactions.
-    pub fn add_transaction(&mut self, from: String, to: String, amount: f32) -> bool {
+    pub fn add_transaction(&mut self, from: String, to: String, amount: f64) -> bool {
         // Validate the transaction
         if !self.validate_transaction(&from, amount) {
             return false;
@@ -163,7 +163,7 @@ impl Chain {
     ///
     /// # Returns
     /// `true` if the transaction is valid, `false` otherwise.
-    pub fn validate_transaction(&self, from: &str, amount: f32) -> bool {
+    pub fn validate_transaction(&self, from: &str, amount: f64) -> bool {
         // Validate if the sender is not the root
         if from == "Root" {
             return false;
@@ -199,7 +199,7 @@ impl Chain {
     ///
     /// # Returns
     /// `true` if the difficulty is successfully updated.
-    pub fn update_difficulty(&mut self, difficulty: u32) -> bool {
+    pub fn update_difficulty(&mut self, difficulty: f64) -> bool {
         self.difficulty = difficulty;
 
         true
@@ -212,7 +212,7 @@ impl Chain {
     ///
     /// # Returns
     /// `true` if the reward is successfully updated.
-    pub fn update_reward(&mut self, reward: f32) -> bool {
+    pub fn update_reward(&mut self, reward: f64) -> bool {
         self.reward = reward;
 
         true
@@ -225,7 +225,7 @@ impl Chain {
     ///
     /// # Returns
     /// `true` if the transaction fee is successfully updated.
-    pub fn update_fee(&mut self, fee: f32) -> bool {
+    pub fn update_fee(&mut self, fee: f64) -> bool {
         self.fee = fee;
 
         true
@@ -364,7 +364,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Chain {
-        Chain::new("Address".to_string(), 1, 100.0, 0.0)
+        Chain::new("Address".to_string(), 1.0, 100.0, 0.0)
     }
 
     #[test]
@@ -470,10 +470,10 @@ mod tests {
     fn test_update_difficulty() {
         let mut chain = setup();
 
-        let result = chain.update_difficulty(4);
+        let result = chain.update_difficulty(4.0);
 
         assert!(result);
-        assert_eq!(chain.difficulty, 4);
+        assert_eq!(chain.difficulty, 4.0);
     }
 
     #[test]

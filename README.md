@@ -31,12 +31,12 @@ A Rust crate provides an interface for interacting with a blockchain.
 
 ## Options
 
-| Option       | Description                                                       |
-|--------------|-------------------------------------------------------------------|
-| `address`    | The address associated with the blockchain.                       |
-| `difficulty` | The initial mining difficulty level of the network.               |
-| `reward`     | The initial block reward for miners.                              |
-| `fee`        | The transaction fee.                                              |
+| Option       | Data type    | Description                                                       |
+|--------------|--------------|-------------------------------------------------------------------|
+| `address`    | `String`     | The address associated with the blockchain.                       |
+| `difficulty` | `f64`        | The initial mining difficulty level of the network.               |
+| `reward`     | `f64`        | The initial block reward for miners.                              |
+| `fee`        | `f64`        | The transaction fee.                                              |
 
 ## Safety
 

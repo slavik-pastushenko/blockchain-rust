@@ -14,7 +14,7 @@ fn main() -> std::io::Result<()> {
         })
         .interact()?;
 
-    let difficulty: u32 = cliclack::input("Difficulty")
+    let difficulty: f64 = cliclack::input("Difficulty")
         .default_input("2")
         .validate(|input: &String| {
             if input.is_empty() {
@@ -25,7 +25,7 @@ fn main() -> std::io::Result<()> {
         })
         .interact()?;
 
-    let reward: f32 = cliclack::input("Reward")
+    let reward: f64 = cliclack::input("Reward")
         .default_input("100.0")
         .validate(|input: &String| {
             if input.is_empty() {
@@ -36,7 +36,7 @@ fn main() -> std::io::Result<()> {
         })
         .interact()?;
 
-    let fee: f32 = cliclack::input("Transaction fee")
+    let fee: f64 = cliclack::input("Transaction fee")
         .default_input("0.0")
         .validate(|input: &String| {
             if input.is_empty() {
@@ -89,7 +89,7 @@ fn main() -> std::io::Result<()> {
                     })
                     .interact()?;
 
-                let amount: f32 = cliclack::input("Amount")
+                let amount: f64 = cliclack::input("Amount")
                     .validate(|input: &String| {
                         if input.is_empty() {
                             Err("Please enter an amount")
@@ -165,7 +165,7 @@ fn main() -> std::io::Result<()> {
                 }
             }
             "change_difficulty" => {
-                let new_difficulty: u32 = cliclack::input("New difficulty")
+                let new_difficulty: f64 = cliclack::input("New difficulty")
                     .validate(|input: &String| {
                         if input.is_empty() {
                             Err("Please enter a new difficulty")
