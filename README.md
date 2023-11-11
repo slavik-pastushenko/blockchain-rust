@@ -95,6 +95,10 @@ fn main() {
 }
 ```
 
+## Examples
+
+[Provides a command-line interface (CLI) for interacting with blockchain](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples)
+
 ## Contributing
 
 Build the application:
