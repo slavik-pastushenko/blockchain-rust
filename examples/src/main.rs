@@ -1,6 +1,5 @@
-use cliclack::spinner;
-
 use blockchain::Chain;
+use cliclack::spinner;
 
 fn main() -> std::io::Result<()> {
     cliclack::clear_screen()?;

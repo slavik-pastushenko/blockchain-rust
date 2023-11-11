@@ -1,12 +1,12 @@
 #![forbid(unsafe_code)]
 
 use chrono::Utc;
-use serde_derive::Serialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fmt::Write;
 
 /// Exchange of assets between two parties
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Transaction {
     /// Transaction hash
     pub hash: String,
@@ -25,7 +25,7 @@ pub struct Transaction {
 }
 
 /// Identifier of a particular block on an entire blockchain
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BlockHeader {
     /// Timestamp at which a block was mined
     pub timestamp: i64,
@@ -44,7 +44,7 @@ pub struct BlockHeader {
 }
 
 /// Data storage in a blockchain
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Block {
     /// Information about the block and the miner
     pub header: BlockHeader,
@@ -57,7 +57,7 @@ pub struct Block {
 }
 
 /// Blockchain
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Chain {
     /// Chain of blocks
     pub chain: Vec<Block>,
@@ -236,15 +236,15 @@ impl Chain {
     /// # Returns
     /// `true` if a new block is successfully generated and added to the blockchain.
     pub fn generate_new_block(&mut self) -> bool {
+        let timestamp = Utc::now().timestamp();
         let header = BlockHeader {
-            timestamp: Utc::now().timestamp(),
             nonce: 0,
-            previous_hash: self.get_last_hash(),
+            timestamp,
             merkle: String::new(),
             difficulty: self.difficulty,
+            previous_hash: self.get_last_hash(),
         };
 
-        let timestamp = Utc::now().timestamp();
         let to = self.address.clone();
         let from = String::from("Root");
         let hash = Chain::hash(&(&from, &to, self.reward, timestamp));

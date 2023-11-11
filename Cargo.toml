@@ -1,13 +1,13 @@
 [package]
 name = "blockchain-cli"
-description = "Provides a command-line interface (CLI) for interacting with blockchain"
+description = "A Rust crate provides an interface for interacting with a blockchain"
 version = "1.0.11"
 edition = "2021"
 license = "MIT"
 readme = "README.md"
 authors = ["Slavik Pastushenko <slavpas@gmail.com>"]
 keywords = ["cli", "crypto", "blockchain"]
-exclude = [".prettierrc.toml", ".github/**"]
+exclude = [".prettierrc.toml", ".github/**", "examples/**"]
 categories = ["command-line-utilities", "cryptography"]
 documentation = "https://docs.rs/blockchain-cli"
 repository = "https://github.com/slavik-pastushenko/blockchain-rust"
@@ -16,14 +16,11 @@ repository = "https://github.com/slavik-pastushenko/blockchain-rust"
 name = "blockchain"
 path = "src/lib.rs"
 
-[[bin]]
-name = "blockchain-prompts"
-path = "src/bin/blockchain.rs"
-
 [dependencies]
 chrono = "0.4.31"
-cliclack = "0.1.9"
 serde = { version = "1.0.192", features = ["derive"] }
-serde_derive = "1.0.192"
 serde_json = "1.0.108"
 sha2 = "0.10.8"
+
+[dev-dependencies]
+cliclack = "0.1.9"

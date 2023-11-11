@@ -1,6 +1,6 @@
-# Blockchain CLI
+# Blockchain
 
-A Rust library provides a command-line interface (CLI) for interacting with blockchain.
+A Rust crate provides an interface for interacting with a blockchain.
 
 ## Reference implementation
 
