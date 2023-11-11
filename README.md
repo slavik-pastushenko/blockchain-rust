@@ -19,9 +19,11 @@ A Rust library provides a command-line interface (CLI) for interacting with bloc
 - `get_transactions()`: Get a list of current transactions in the blockchain.
 - `get_transaction(hash)`: Get a transaction by its hash.
 - `add_transaction(from, to, amount)`: Add a new transaction to the blockchain.
+- `validate_transaction(from, amount)`: Validate a new transaction to the blockchain.
 - `get_last_hash()`: Get the hash of the last block in the blockchain.
 - `update_difficulty(difficulty)`: Update the mining difficulty of the blockchain.
 - `update_reward(reward)`: Update the block reward.
+- `update_fee(fee)`: Update the transaction fee.
 - `generate_new_block()`: Generate a new block and append it to the blockchain.
 - `get_merkle(transactions)`: Calculate the Merkle root hash for a list of transactions.
 - `proof_of_work(header)`: Perform the proof-of-work process to mine a block.
@@ -34,10 +36,17 @@ A Rust library provides a command-line interface (CLI) for interacting with bloc
 | `address`    | The address associated with the blockchain.                       |
 | `difficulty` | The initial mining difficulty level of the network.               |
 | `reward`     | The initial block reward for miners.                              |
+| `fee`        | The transaction fee.                                              |
 
 ## Safety
 
 This crate uses `#![forbid(unsafe_code)]` to ensure everything is implemented in 100% safe Rust.
+
+## Documentation
+
+For more in-depth details, please refer to the full [documentation](https://docs.rs/blockchain-cli).
+
+If you encounter any issues or have questions that are not addressed in the documentation, feel free to [submit an issue](https://github.com/slavik-pastushenko/blockchain-rust/issues).
 
 ## Usage
 
@@ -57,7 +66,8 @@ fn main() {
   let mut chain = Chain::new(
     String::from("bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"),
     2,
-    100.0
+    100.0,
+    0.01,
   );
 
   // Add a transaction
@@ -87,25 +97,25 @@ fn main() {
 
 ## Contributing
 
-- Build an application:
+Build an application:
 
 ```bash
 cargo build
 ```
 
-- Test an application:
+Test an application:
 
 ```bash
 cargo test
 ```
 
-- Run an application:
+Run an application:
 
 ```bash
 cargo run
 ```
 
-- Run [clippy](https://github.com/rust-lang/rust-clippy):
+Run [clippy](https://github.com/rust-lang/rust-clippy):
 
 ```bash
 cargo clippy --all-targets --all-features -- -D warnings
@@ -117,7 +127,7 @@ Run [lint](https://github.com/rust-lang/rustfmt):
 cargo fmt
 ```
 
-- Generate documentation in HTML format:
+Generate documentation in HTML format:
 
 ```bash
 cargo doc --open

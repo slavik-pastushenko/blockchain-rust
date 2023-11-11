@@ -37,10 +37,21 @@ fn main() -> std::io::Result<()> {
         })
         .interact()?;
 
+    let fee: f32 = cliclack::input("Transaction fee")
+        .default_input("0.0")
+        .validate(|input: &String| {
+            if input.is_empty() {
+                Err("Please enter a transaction fee")
+            } else {
+                Ok(())
+            }
+        })
+        .interact()?;
+
     let mut spinner = spinner();
     spinner.start("Generating a genesis block...");
 
-    let mut chain = Chain::new(address.trim().to_string(), difficulty, reward);
+    let mut chain = Chain::new(address.trim().to_string(), difficulty, reward, fee);
 
     spinner.stop("✅ Blockchain was created successfully");
 
@@ -53,6 +64,7 @@ fn main() -> std::io::Result<()> {
             .item("generate_block", "Generate a new block", "")
             .item("change_reward", "Change a reward", "")
             .item("change_difficulty", "Change a difficulty", "")
+            .item("change_fee", "Change a transaction fee", "")
             .item("exit", "Exit", "")
             .interact()?;
 
@@ -172,6 +184,28 @@ fn main() -> std::io::Result<()> {
                     match res {
                         true => println!("✅ Difficulty was changed successfully"),
                         false => println!("❌ Cannot change a difficulty"),
+                    }
+                }
+            }
+            "change_fee" => {
+                let new_fee: String = cliclack::input("New transaction fee")
+                    .validate(|input: &String| {
+                        if input.is_empty() {
+                            Err("Please enter a new transaction fee")
+                        } else {
+                            Ok(())
+                        }
+                    })
+                    .interact()?;
+
+                let confirm = cliclack::confirm("Confirm changing a transaction fee").interact()?;
+
+                if confirm {
+                    let res = chain.update_fee(new_fee.trim().parse().unwrap());
+
+                    match res {
+                        true => println!("✅ Transaction fee was changed successfully"),
+                        false => println!("❌ Cannot change a transaction fee"),
                     }
                 }
             }

@@ -5,74 +5,77 @@ use serde_derive::Serialize;
 use sha2::{Digest, Sha256};
 use std::fmt::Write;
 
-/// An exchange of assets between two parties
+/// Exchange of assets between two parties
 #[derive(Debug, Clone, Serialize)]
 pub struct Transaction {
-    /// A transaction hash
+    /// Transaction hash
     pub hash: String,
 
-    /// A transaction sender address
+    /// Transaction sender address
     pub from: String,
 
-    /// A transaction receiver address
+    /// Transaction receiver address
     pub to: String,
 
-    /// A transaction amount
+    /// Transaction amount
     pub amount: f32,
 
-    /// A transaction timestamp
+    /// Transaction timestamp
     pub timestamp: i64,
 }
 
-/// A identifier of a particular block on an entire blockchain
+/// Identifier of a particular block on an entire blockchain
 #[derive(Debug, Serialize)]
 pub struct BlockHeader {
-    /// A timestamp at which a block was mined
+    /// Timestamp at which a block was mined
     pub timestamp: i64,
 
-    /// An integer to achieve the network's difficulty
+    /// Integer to achieve the network's difficulty
     pub nonce: u32,
 
-    /// A hash of a previous block
+    /// Hash of a previous block
     pub previous_hash: String,
 
-    /// A Merkel root hash
+    /// Merkel root hash
     pub merkle: String,
 
-    /// A current difficulty level of the network
+    /// Current difficulty level of the network
     pub difficulty: u32,
 }
 
-/// A data storage in a blockchain
+/// Data storage in a blockchain
 #[derive(Debug, Serialize)]
 pub struct Block {
     /// Information about the block and the miner
     pub header: BlockHeader,
 
-    /// A total amount of transactions
+    /// Total amount of transactions
     pub count: usize,
 
     /// An amount of transactions
     pub transactions: Vec<Transaction>,
 }
 
-/// A blockchain
+/// Blockchain
 #[derive(Debug, Serialize)]
 pub struct Chain {
-    /// A chain of blocks
+    /// Chain of blocks
     pub chain: Vec<Block>,
 
-    /// A list of transactions
+    /// List of transactions
     pub current_transactions: Vec<Transaction>,
 
-    /// A current difficulty level of the network
+    /// Current difficulty level of the network
     pub difficulty: u32,
 
-    /// A blockchain genesis address
+    /// Blockchain genesis address
     pub address: String,
 
-    /// A block reward
+    /// Block reward
     pub reward: f32,
+
+    /// Transaction fee
+    pub fee: f32,
 }
 
 impl Chain {
@@ -82,11 +85,13 @@ impl Chain {
     /// - `address`: The address associated with the blockchain.
     /// - `difficulty`: The initial mining difficulty level of the network.
     /// - `reward`: The initial block reward for miners.
+    /// - `fee`: The transaction fee.
     ///
     /// # Returns
     /// A new `Chain` instance with the given parameters and a genesis block.
-    pub fn new(address: String, difficulty: u32, reward: f32) -> Self {
+    pub fn new(address: String, difficulty: u32, reward: f32, fee: f32) -> Self {
         let mut chain = Chain {
+            fee,
             reward,
             address,
             difficulty,
@@ -130,16 +135,44 @@ impl Chain {
     /// # Returns
     /// `true` if the transaction is successfully added to the current transactions.
     pub fn add_transaction(&mut self, from: String, to: String, amount: f32) -> bool {
+        // Validate the transaction
+        if !self.validate_transaction(&from, amount) {
+            return false;
+        }
+
         let timestamp = Utc::now().timestamp();
-        let hash = Chain::hash(&(&from, &to, amount, timestamp));
+        let total_amount = amount * self.fee;
+        let hash = Chain::hash(&(&from, &to, total_amount, timestamp));
 
         self.current_transactions.push(Transaction {
             to,
             from,
             hash,
-            amount,
+            amount: total_amount,
             timestamp: Utc::now().timestamp(),
         });
+
+        true
+    }
+
+    /// Validate a transaction.
+    ///
+    /// # Arguments
+    /// - `from`: The sender's address.
+    /// - `amount`: The amount of the transaction.
+    ///
+    /// # Returns
+    /// `true` if the transaction is valid, `false` otherwise.
+    pub fn validate_transaction(&self, from: &str, amount: f32) -> bool {
+        // Validate if the sender is not the root
+        if from == "Root" {
+            return false;
+        }
+
+        // Validate if the amount is non-negative
+        if amount <= 0.0 {
+            return false;
+        }
 
         true
     }
@@ -181,6 +214,19 @@ impl Chain {
     /// `true` if the reward is successfully updated.
     pub fn update_reward(&mut self, reward: f32) -> bool {
         self.reward = reward;
+
+        true
+    }
+
+    /// Update the transaction fee.
+    ///
+    /// # Arguments
+    /// - `fee`: The new transaction fee value.
+    ///
+    /// # Returns
+    /// `true` if the transaction fee is successfully updated.
+    pub fn update_fee(&mut self, fee: f32) -> bool {
+        self.fee = fee;
 
         true
     }
@@ -318,7 +364,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Chain {
-        Chain::new("Address".to_string(), 1, 100.0)
+        Chain::new("Address".to_string(), 1, 100.0, 0.0)
     }
 
     #[test]
@@ -329,6 +375,43 @@ mod tests {
 
         assert!(result);
         assert_eq!(chain.current_transactions.len(), 1);
+    }
+
+    #[test]
+    fn test_add_transaction_validation_failed() {
+        let mut chain = setup();
+
+        let result = chain.add_transaction("Sender".to_string(), "Receiver".to_string(), 0.0);
+
+        assert!(!result);
+        assert!(chain.current_transactions.is_empty());
+    }
+
+    #[test]
+    fn test_validate_transaction() {
+        let chain = setup();
+
+        let result = chain.validate_transaction("Sender", 10.0);
+
+        assert!(result);
+    }
+
+    #[test]
+    fn test_validate_transaction_failed_by_invalid_amount() {
+        let chain = setup();
+
+        let result = chain.validate_transaction("Sender", -1.0);
+
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_validate_transaction_failed_by_root() {
+        let chain = setup();
+
+        let result = chain.validate_transaction("Root", 0.01);
+
+        assert!(!result);
     }
 
     #[test]
@@ -401,6 +484,16 @@ mod tests {
 
         assert!(result);
         assert_eq!(chain.reward, 50.0);
+    }
+
+    #[test]
+    fn test_update_fee() {
+        let mut chain = setup();
+
+        let result = chain.update_fee(0.02);
+
+        assert!(result);
+        assert_eq!(chain.fee, 0.02);
     }
 
     #[test]
