@@ -1,7 +1,7 @@
 [package]
 name = "blockchain-cli"
 description = "Provides a command-line interface (CLI) for interacting with blockchain"
-version = "1.0.9"
+version = "1.0.10"
 edition = "2021"
 license = "MIT"
 readme = "README.md"
