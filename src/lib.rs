@@ -148,8 +148,8 @@ impl Chain {
             to,
             from,
             hash,
+            timestamp,
             amount: total_amount,
-            timestamp: Utc::now().timestamp(),
         });
 
         true

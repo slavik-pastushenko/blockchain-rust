@@ -50,7 +50,7 @@ If you encounter any issues or have questions that are not addressed in the docu
 
 ## Usage
 
-Run the following Cargo command in your project directory::
+Run the following Cargo command in your project directory:
 
 ```bash
 cargo add blockchain-cli
@@ -97,19 +97,19 @@ fn main() {
 
 ## Contributing
 
-Build an application:
+Build the application:
 
 ```bash
 cargo build
 ```
 
-Test an application:
+Test the application:
 
 ```bash
 cargo test
 ```
 
-Run an application:
+Run the application:
 
 ```bash
 cargo run
