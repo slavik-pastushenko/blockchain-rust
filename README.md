@@ -15,7 +15,7 @@ A Rust crate provides an interface for interacting with a blockchain.
 
 ## Features
 
-- `new(address, difficulty, reward)`: Initialize a new blockchain with the specified parameters.
+- `new(difficulty, reward, fee)`: Initialize a new blockchain with the specified parameters.
 - `get_transactions()`: Get a list of current transactions in the blockchain.
 - `get_transaction(hash)`: Get a transaction by its hash.
 - `add_transaction(from, to, amount)`: Add a new transaction to the blockchain.
@@ -33,7 +33,6 @@ A Rust crate provides an interface for interacting with a blockchain.
 
 | Option       | Data type    | Description                                                       |
 |--------------|--------------|-------------------------------------------------------------------|
-| `address`    | `String`     | The address associated with the blockchain.                       |
 | `difficulty` | `f64`        | The initial mining difficulty level of the network.               |
 | `reward`     | `f64`        | The initial block reward for miners.                              |
 | `fee`        | `f64`        | The transaction fee.                                              |
@@ -63,12 +62,7 @@ use blockchain::Chain;
 
 fn main() {
   // Initialise a new blockchain
-  let mut chain = Chain::new(
-    String::from("bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh"),
-    2,
-    100.0,
-    0.01,
-  );
+  let mut chain = Chain::new(2, 100.0, 0.01);
 
   // Add a transaction
   chain.add_transaction(
@@ -97,7 +91,7 @@ fn main() {
 
 ## Examples
 
-[Provides a command-line interface (CLI) for interacting with blockchain](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples)
+[Provides a command-line interface (CLI) for interacting with blockchain](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
 
 ## Contributing
 

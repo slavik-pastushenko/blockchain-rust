@@ -1,9 +1,11 @@
 #![forbid(unsafe_code)]
 
 use chrono::Utc;
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fmt::Write;
+use std::iter;
 
 /// Exchange of assets between two parties
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -16,6 +18,9 @@ pub struct Transaction {
 
     /// Transaction receiver address
     pub to: String,
+
+    /// Transaction fee
+    pub fee: f64,
 
     /// Transaction amount
     pub amount: f64,
@@ -82,21 +87,20 @@ impl Chain {
     /// Initialize a new blockchain with the specified parameters.
     ///
     /// # Arguments
-    /// - `address`: The address associated with the blockchain.
     /// - `difficulty`: The initial mining difficulty level of the network.
     /// - `reward`: The initial block reward for miners.
     /// - `fee`: The transaction fee.
     ///
     /// # Returns
     /// A new `Chain` instance with the given parameters and a genesis block.
-    pub fn new(address: String, difficulty: f64, reward: f64, fee: f64) -> Self {
+    pub fn new(difficulty: f64, reward: f64, fee: f64) -> Self {
         let mut chain = Chain {
             fee,
             reward,
-            address,
             difficulty,
             chain: Vec::new(),
             current_transactions: Vec::new(),
+            address: Chain::generate_genesis_address(42),
         };
 
         chain.generate_new_block();
@@ -149,6 +153,7 @@ impl Chain {
             from,
             hash,
             timestamp,
+            fee: self.fee,
             amount: total_amount,
         });
 
@@ -254,6 +259,7 @@ impl Chain {
             from,
             hash,
             timestamp,
+            fee: self.fee,
             amount: self.reward,
         };
 
@@ -357,6 +363,24 @@ impl Chain {
 
         result
     }
+
+    /// Generates a random alphanumeric string of a specified length.
+    ///
+    /// # Arguments
+    /// - `length`: The length of the generated string.
+    ///
+    /// # Returns
+    /// A `String` containing the generated alphanumeric string.
+    fn generate_genesis_address(length: usize) -> String {
+        let mut rng = rand::thread_rng();
+
+        let address: String = iter::repeat(())
+            .map(|()| rng.sample(rand::distributions::Alphanumeric) as char)
+            .take(length)
+            .collect();
+
+        address
+    }
 }
 
 #[cfg(test)]
@@ -364,7 +388,7 @@ mod tests {
     use super::*;
 
     fn setup() -> Chain {
-        Chain::new("Address".to_string(), 1.0, 100.0, 0.0)
+        Chain::new(1.0, 100.0, 0.0)
     }
 
     #[test]
@@ -504,5 +528,12 @@ mod tests {
 
         assert!(result);
         assert_eq!(chain.chain.len(), 2);
+    }
+
+    #[test]
+    fn test_generate_genesis_address() {
+        let result = Chain::generate_genesis_address(42);
+
+        assert_eq!(result.len(), 42);
     }
 }

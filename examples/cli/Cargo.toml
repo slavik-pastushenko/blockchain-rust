@@ -1,13 +1,13 @@
 [package]
-name = "blockchain-cli-examples"
+name = "cli"
 version = "0.0.0"
 edition = "2021"
 publish = false
 
 [[bin]]
-name = "blockchain-prompts"
+name = "cli"
 path = "src/main.rs"
 
 [dependencies]
-blockchain-cli = { path = ".." }
+blockchain-cli = { path = "../.." }
 cliclack = "0.1.9"

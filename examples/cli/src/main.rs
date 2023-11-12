@@ -4,16 +4,6 @@ use cliclack::spinner;
 fn main() -> std::io::Result<()> {
     cliclack::clear_screen()?;
 
-    let address: String = cliclack::input("Address")
-        .validate(|input: &String| {
-            if input.is_empty() {
-                Err("Please enter an address")
-            } else {
-                Ok(())
-            }
-        })
-        .interact()?;
-
     let difficulty: f64 = cliclack::input("Difficulty")
         .default_input("2")
         .validate(|input: &String| {
@@ -50,9 +40,12 @@ fn main() -> std::io::Result<()> {
     let mut spinner = spinner();
     spinner.start("Generating a genesis block...");
 
-    let mut chain = Chain::new(address.trim().to_string(), difficulty, reward, fee);
+    let mut chain = Chain::new(difficulty, reward, fee);
 
-    spinner.stop("✅ Blockchain was created successfully");
+    spinner.stop(format!(
+        "✅ Blockchain was created successfully: {}",
+        chain.address
+    ));
 
     loop {
         let action = cliclack::select("💡 Select an action")
