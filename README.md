@@ -11,7 +11,7 @@ A Rust crate provides an interface for interacting with a blockchain.
 ![Crates.io (recent)](https://img.shields.io/crates/dr/blockchain-cli)
 [![codecov](https://codecov.io/gh/slavik-pastushenko/blockchain-rust/graph/badge.svg?token=9EL0F6725A)](https://codecov.io/gh/slavik-pastushenko/blockchain-rust)
 
-![Features](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/f9f15dbf-8594-4a1c-9d7a-675567a205da)
+![Features](https://github.com/slavik-pastushenko/blockchain-rust/assets/16807375/28123ed1-aa79-40d7-a59a-3a0710acc381)
 
 ## Features
 
