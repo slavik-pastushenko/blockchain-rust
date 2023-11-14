@@ -5,7 +5,7 @@ fn main() -> std::io::Result<()> {
     cliclack::clear_screen()?;
 
     let difficulty: f64 = cliclack::input("Difficulty")
-        .default_input("2")
+        .default_input("2.0")
         .validate(|input: &String| {
             if input.is_empty() {
                 Err("Please enter a difficulty")
@@ -50,6 +50,8 @@ fn main() -> std::io::Result<()> {
     loop {
         let action = cliclack::select("💡 Select an action")
             .initial_value("add_transaction")
+            .item("create_wallet", "Create a new wallet", "")
+            .item("get_wallet_balance", "Get a wallet balance", "")
             .item("add_transaction", "Add a new transaction", "")
             .item("get_transaction", "Get a transaction", "")
             .item("get_transactions", "Get all transactions", "")
@@ -61,6 +63,43 @@ fn main() -> std::io::Result<()> {
             .interact()?;
 
         match action {
+            "create_wallet" => {
+                let email: String = cliclack::input("Email")
+                    .validate(|input: &String| {
+                        if input.is_empty() {
+                            Err("Please enter an email")
+                        } else {
+                            Ok(())
+                        }
+                    })
+                    .interact()?;
+
+                let confirm = cliclack::confirm("Confirm creating a wallet").interact()?;
+
+                if confirm {
+                    let address = chain.create_wallet(email);
+
+                    println!("✅ Wallet was created successfully: {}", address)
+                }
+            }
+            "get_wallet_balance" => {
+                let address: String = cliclack::input("Address")
+                    .validate(|input: &String| {
+                        if input.is_empty() {
+                            Err("Please enter an address")
+                        } else {
+                            Ok(())
+                        }
+                    })
+                    .interact()?;
+
+                let balance = chain.get_wallet_balance(address);
+
+                match balance.is_some() {
+                    true => println!("✅ Wallet balance: {}", balance.unwrap()),
+                    false => println!("❌ Cannot find a wallet"),
+                }
+            }
             "add_transaction" => {
                 let sender: String = cliclack::input("Sender")
                     .validate(|input: &String| {

@@ -4,6 +4,7 @@ use chrono::Utc;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use std::collections::HashMap;
 use std::fmt::Write;
 use std::iter;
 
@@ -61,6 +62,19 @@ pub struct Block {
     pub transactions: Vec<Transaction>,
 }
 
+/// Wallet
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct Wallet {
+    /// Unique email address associated with the wallet.
+    pub email: String,
+
+    /// Address uniquely identifying the wallet.
+    pub address: String,
+
+    /// The current balance of the wallet.
+    pub balance: f64,
+}
+
 /// Blockchain
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Chain {
@@ -81,6 +95,9 @@ pub struct Chain {
 
     /// Transaction fee
     pub fee: f64,
+
+    /// A map to associate wallets with their corresponding addresses and balances.
+    pub wallets: HashMap<String, Wallet>,
 }
 
 impl Chain {
@@ -99,8 +116,9 @@ impl Chain {
             reward,
             difficulty,
             chain: Vec::new(),
+            wallets: HashMap::new(),
             current_transactions: Vec::new(),
-            address: Chain::generate_genesis_address(42),
+            address: Chain::generate_address(42),
         };
 
         chain.generate_new_block();
@@ -139,14 +157,22 @@ impl Chain {
     /// # Returns
     /// `true` if the transaction is successfully added to the current transactions.
     pub fn add_transaction(&mut self, from: String, to: String, amount: f64) -> bool {
+        let total_amount = amount * self.fee;
+
         // Validate the transaction
-        if !self.validate_transaction(&from, amount) {
+        if !self.validate_transaction(&from, &to, total_amount) {
             return false;
         }
 
         let timestamp = Utc::now().timestamp();
-        let total_amount = amount * self.fee;
         let hash = Chain::hash(&(&from, &to, total_amount, timestamp));
+
+        // Update balances
+        let sender = self.wallets.get_mut(&from).unwrap();
+        sender.balance -= total_amount;
+
+        let receiver = self.wallets.get_mut(&to).unwrap();
+        receiver.balance += amount;
 
         self.current_transactions.push(Transaction {
             to,
@@ -164,13 +190,19 @@ impl Chain {
     ///
     /// # Arguments
     /// - `from`: The sender's address.
+    /// - `to`: The receiver's address.
     /// - `amount`: The amount of the transaction.
     ///
     /// # Returns
     /// `true` if the transaction is valid, `false` otherwise.
-    pub fn validate_transaction(&self, from: &str, amount: f64) -> bool {
+    pub fn validate_transaction(&self, from: &str, to: &str, amount: f64) -> bool {
         // Validate if the sender is not the root
         if from == "Root" {
+            return false;
+        }
+
+        // Validate that sender and receiver addresses are different
+        if from == to {
             return false;
         }
 
@@ -179,7 +211,53 @@ impl Chain {
             return false;
         }
 
+        // Validate if sender and receiver addresses are valid
+        let sender = self.wallets.get(from);
+        let receiver = self.wallets.get(to);
+
+        if sender.is_none() || receiver.is_none() {
+            // One or both wallets not found
+            return false;
+        }
+
+        // Validate if sender can send the amount of the transaction
+        if sender.unwrap().balance < amount {
+            return false;
+        }
+
         true
+    }
+
+    /// Create a new wallet with a unique email and an initial balance.
+    ///
+    /// # Arguments
+    /// - `email`: The unique user email.
+    ///
+    /// # Returns
+    /// The newly created wallet address.
+    pub fn create_wallet(&mut self, email: String) -> String {
+        let address = Chain::generate_address(42);
+
+        let wallet = Wallet {
+            email,
+            balance: 0.0,
+            address: address.clone(),
+        };
+
+        self.wallets.insert(address.to_string(), wallet);
+
+        address
+    }
+
+    /// Get a wallet's balance based on its address.
+    ///
+    /// # Arguments
+    /// - `address`: The unique wallet address.
+    ///
+    /// # Returns
+    /// The wallet balance.
+    pub fn get_wallet_balance(&self, address: String) -> Option<f64> {
+        self.wallets.get(&address).map(|wallet| wallet.balance)
     }
 
     /// Get the hash of the last block in the blockchain.
@@ -371,7 +449,7 @@ impl Chain {
     ///
     /// # Returns
     /// A `String` containing the generated alphanumeric string.
-    fn generate_genesis_address(length: usize) -> String {
+    fn generate_address(length: usize) -> String {
         let mut rng = rand::thread_rng();
 
         let address: String = iter::repeat(())
@@ -388,14 +466,20 @@ mod tests {
     use super::*;
 
     fn setup() -> Chain {
-        Chain::new(1.0, 100.0, 0.0)
+        Chain::new(1.0, 100.0, 0.1)
     }
 
     #[test]
     fn test_add_transaction() {
         let mut chain = setup();
 
-        let result = chain.add_transaction("Sender".to_string(), "Receiver".to_string(), 10.0);
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
+
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        let result = chain.add_transaction(from, to, 10.0);
 
         assert!(result);
         assert_eq!(chain.current_transactions.len(), 1);
@@ -404,8 +488,13 @@ mod tests {
     #[test]
     fn test_add_transaction_validation_failed() {
         let mut chain = setup();
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
 
-        let result = chain.add_transaction("Sender".to_string(), "Receiver".to_string(), 0.0);
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        let result = chain.add_transaction(from, to, 0.0);
 
         assert!(!result);
         assert!(chain.current_transactions.is_empty());
@@ -413,18 +502,73 @@ mod tests {
 
     #[test]
     fn test_validate_transaction() {
-        let chain = setup();
+        let mut chain = setup();
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
 
-        let result = chain.validate_transaction("Sender", 10.0);
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        let result = chain.validate_transaction(&from, &to, 10.0);
 
         assert!(result);
     }
 
     #[test]
     fn test_validate_transaction_failed_by_invalid_amount() {
+        let mut chain = setup();
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
+
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        let result = chain.validate_transaction(&from, &to, -1.0);
+
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_validate_transaction_failed_by_invalid_sender() {
+        let mut chain = setup();
+        let _ = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
+
+        let result = chain.validate_transaction("invalid", &to, 1.0);
+
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_validate_transaction_failed_by_invalid_receiver() {
+        let mut chain = setup();
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let _ = chain.create_wallet("r@mail.com".to_string());
+
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        let result = chain.validate_transaction(&from, "invalid", 1.0);
+
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_validate_transaction_failed_by_same_addresses() {
         let chain = setup();
 
-        let result = chain.validate_transaction("Sender", -1.0);
+        let result = chain.validate_transaction("address", "address", 1.0);
+
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_validate_transaction_failed_by_invalid_sender_balance() {
+        let mut chain = setup();
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
+
+        let result = chain.validate_transaction(&from, &to, 1.0);
 
         assert!(!result);
     }
@@ -433,22 +577,27 @@ mod tests {
     fn test_validate_transaction_failed_by_root() {
         let chain = setup();
 
-        let result = chain.validate_transaction("Root", 0.01);
+        let result = chain.validate_transaction("Root", "Receiver", 0.01);
 
         assert!(!result);
     }
 
     #[test]
-    fn test_get_transaction_found() {
+    fn test_get_transaction() {
         let mut chain = setup();
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
 
-        chain.add_transaction("Sender".to_string(), "Receiver".to_string(), 10.0);
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        chain.add_transaction(from.clone(), to.clone(), 10.0);
 
         let transaction = chain.get_transaction(chain.current_transactions[0].hash.clone());
 
         assert!(transaction.is_some());
-        assert_eq!(transaction.unwrap().from, "Sender");
-        assert_eq!(transaction.unwrap().to, "Receiver");
+        assert_eq!(transaction.unwrap().from, from);
+        assert_eq!(transaction.unwrap().to, to);
     }
 
     #[test]
@@ -463,14 +612,20 @@ mod tests {
     #[test]
     fn test_get_transactions() {
         let mut chain = setup();
-        chain.add_transaction("Sender1".to_string(), "Receiver1".to_string(), 10.0);
-        chain.add_transaction("Sender2".to_string(), "Receiver2".to_string(), 20.0);
+        let from = chain.create_wallet("s@mail.com".to_string());
+        let to = chain.create_wallet("r@mail.com".to_string());
+
+        let sender = chain.wallets.get_mut(&from).unwrap();
+        sender.balance += 20.0;
+
+        chain.add_transaction(from.clone(), to.clone(), 10.0);
+        chain.add_transaction(to.clone(), from.clone(), 20.0);
 
         let transactions = chain.get_transactions();
 
         assert_eq!(transactions.len(), 2);
-        assert_eq!(transactions[0].from, "Sender1");
-        assert_eq!(transactions[1].from, "Sender2");
+        assert_eq!(transactions[0].from, from);
+        assert_eq!(transactions[1].from, to);
     }
 
     #[test]
@@ -480,6 +635,34 @@ mod tests {
         let transactions = chain.get_transactions();
 
         assert!(transactions.is_empty());
+    }
+
+    #[test]
+    fn test_create_wallet() {
+        let mut chain = setup();
+
+        let result = chain.create_wallet("s@mail.com".to_string());
+
+        assert_eq!(result.len(), 42);
+    }
+
+    #[test]
+    fn test_get_wallet_balance() {
+        let mut chain = setup();
+        let address = chain.create_wallet("s@mail.com".to_string());
+
+        let result = chain.get_wallet_balance(address);
+
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn test_get_wallet_balance_not_found() {
+        let chain = setup();
+
+        let result = chain.get_wallet_balance("address".to_string());
+
+        assert!(result.is_none());
     }
 
     #[test]
@@ -531,8 +714,8 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_genesis_address() {
-        let result = Chain::generate_genesis_address(42);
+    fn test_generate_address() {
+        let result = Chain::generate_address(42);
 
         assert_eq!(result.len(), 42);
     }
