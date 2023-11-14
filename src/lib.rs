@@ -63,7 +63,7 @@ pub struct Block {
 }
 
 /// Wallet
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Wallet {
     /// Unique email address associated with the wallet.
     pub email: String,
