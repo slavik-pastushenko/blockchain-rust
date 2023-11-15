@@ -49,6 +49,13 @@ For more in-depth details, please refer to the full [documentation](https://docs
 
 If you encounter any issues or have questions that are not addressed in the documentation, feel free to [submit an issue](https://github.com/slavik-pastushenko/blockchain-rust/issues).
 
+## Examples
+
+Explore the capabilities of this blockchain implementation through a set of examples:
+
+- CLI for interacting with the blockchain: [see more](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
+- API for interacting with the blockchain using axum: [see more](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/api-axum)
+
 ## Usage
 
 Run the following Cargo command in your project directory:
@@ -92,13 +99,6 @@ fn main() {
   // Others
 }
 ```
-
-## Examples
-
-Explore the capabilities of this blockchain implementation through a set of examples:
-
-- CLI for interacting with the blockchain: [see more](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
-- API for interacting with the blockchain using axum: [see more](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/api-axum)
 
 ## Contributing
 
