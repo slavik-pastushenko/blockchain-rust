@@ -97,8 +97,8 @@ fn main() {
 
 Explore the capabilities of this blockchain implementation through a set of examples:
 
-- [CLI for interacting with the blockchain](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
-- [API for interacting with the blockchain using axum](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/api-axum)
+- CLI for interacting with the blockchain: [see more](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
+- API for interacting with the blockchain using axum: [see more](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/api-axum)
 
 ## Contributing
 
