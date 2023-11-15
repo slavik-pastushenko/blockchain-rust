@@ -9,7 +9,7 @@ use std::fmt::Write;
 use std::iter;
 
 /// Exchange of assets between two parties
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Transaction {
     /// Transaction hash
     pub hash: String,
@@ -31,7 +31,7 @@ pub struct Transaction {
 }
 
 /// Identifier of a particular block on an entire blockchain
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct BlockHeader {
     /// Timestamp at which a block was mined
     pub timestamp: i64,
@@ -50,7 +50,7 @@ pub struct BlockHeader {
 }
 
 /// Data storage in a blockchain
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Block {
     /// Information about the block and the miner
     pub header: BlockHeader,
@@ -63,7 +63,7 @@ pub struct Block {
 }
 
 /// Wallet
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Wallet {
     /// Unique email address associated with the wallet.
     pub email: String,
@@ -76,7 +76,7 @@ pub struct Wallet {
 }
 
 /// Blockchain
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Chain {
     /// Chain of blocks
     pub chain: Vec<Block>,

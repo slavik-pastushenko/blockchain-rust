@@ -95,7 +95,10 @@ fn main() {
 
 ## Examples
 
-[Provides a command-line interface (CLI) for interacting with blockchain](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
+Explore the capabilities of this blockchain implementation through a set of examples:
+
+- [CLI for interacting with the blockchain](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/cli)
+- [API for interacting with the blockchain using axum](https://github.com/slavik-pastushenko/blockchain-rust/tree/main/examples/api-axum)
 
 ## Contributing
 
