@@ -58,15 +58,7 @@ Explore the capabilities of this blockchain implementation through a set of exam
 
 ## Usage
 
-Run the following Cargo command in your project directory:
-
-```bash
-cargo add blockchain-cli
-```
-
 ```rust
-extern crate blockchain;
-
 use blockchain::Chain;
 
 fn main() {
