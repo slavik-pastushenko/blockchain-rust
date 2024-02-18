@@ -30,10 +30,10 @@ impl Transaction {
     ///
     /// # Arguments
     ///
-    /// * `from` - The transaction sender address.
-    /// * `to` - The transaction receiver address.
-    /// * `fee` - The transaction fee.
-    /// * `amount` - The transaction amount.
+    /// - `from` - The transaction sender address.
+    /// - `to` - The transaction receiver address.
+    /// - `fee` - The transaction fee.
+    /// - `amount` - The transaction amount.
     ///
     /// # Returns
     ///

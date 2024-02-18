@@ -117,7 +117,7 @@ fn main() -> std::io::Result<()> {
                     })
                     .interact()?;
 
-                let transactions = chain.get_wallet_transactions(address);
+                let transactions = chain.get_wallet_transactions(address, 0, 10);
 
                 match transactions {
                     Some(transactions) => println!("✅ Wallet transactions: {:?}", transactions),
@@ -189,7 +189,7 @@ fn main() -> std::io::Result<()> {
                 }
             }
             "get_transactions" => {
-                println!("📦 {:?}", chain.get_transactions());
+                println!("📦 {:?}", chain.get_transactions(0, 10));
             }
             "generate_block" => {
                 let res = chain.generate_new_block();

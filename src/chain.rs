@@ -59,10 +59,27 @@ impl Chain {
 
     /// Get a list of current transactions in the blockchain.
     ///
+    /// # Arguments
+    /// - `page`: The page number.
+    /// - `size`: The number of transactions per page.
+    ///
     /// # Returns
-    /// A reference to a vector containing the current transactions.
-    pub fn get_transactions(&mut self) -> &Vec<Transaction> {
-        &self.current_transactions
+    /// A reference to a vector containing the current transactions for the specified page.
+    pub fn get_transactions(&self, page: usize, size: usize) -> Vec<Transaction> {
+        // Calculate the total number of pages
+        let total_pages = (self.current_transactions.len() + size - 1) / size;
+
+        // Return an empty vector if the page is greater than the total number of pages
+        if page > total_pages {
+            return Vec::new();
+        }
+
+        // Calculate the start and end indices for the transactions of the current page
+        let start = page.saturating_sub(1) * size;
+        let end = start + size;
+
+        // Get the transactions for the current page
+        self.current_transactions[start..end.min(self.current_transactions.len())].to_vec()
     }
 
     /// Get a transaction by its hash.
@@ -200,10 +217,17 @@ impl Chain {
     ///
     /// # Arguments
     /// - `address`: The unique wallet address.
+    /// - `page`: The page number.
+    /// - `size`: The number of transactions per page.
     ///
     /// # Returns
-    /// The wallet transaction history.
-    pub fn get_wallet_transactions(&self, address: String) -> Option<Vec<Transaction>> {
+    /// The wallet transaction history for the specified page.
+    pub fn get_wallet_transactions(
+        &self,
+        address: String,
+        page: usize,
+        size: usize,
+    ) -> Option<Vec<Transaction>> {
         match self
             .wallets
             .get(&address)
@@ -213,8 +237,20 @@ impl Chain {
             Some(txs) => {
                 let mut result = Vec::new();
 
-                for tx in txs {
-                    match self.get_transaction(tx) {
+                // Calculate the total number of pages
+                let total_pages = (self.current_transactions.len() + size - 1) / size;
+
+                // Return an empty vector if the page is greater than the total number of pages
+                if page > total_pages {
+                    return Some(result);
+                }
+
+                // Calculate the start and end indices for the transactions of the current page
+                let start = page.saturating_sub(1) * size;
+                let end = start + size;
+
+                for tx in txs[start..end.min(txs.len())].iter() {
+                    match self.get_transaction(tx.to_string()) {
                         Some(transaction) => result.push(transaction.to_owned()),
                         None => continue,
                     }

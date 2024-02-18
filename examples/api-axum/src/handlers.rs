@@ -19,14 +19,14 @@ pub struct AppState {
 
 /// Create a new wallet.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CreateWallet {
+pub struct CreateWalletInput {
     /// The wallet email.
     pub email: String,
 }
 
 /// Add a new transaction.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AddTransaction {
+pub struct AddTransactionInput {
     /// The sender address.
     pub from: String,
 
@@ -39,24 +39,47 @@ pub struct AddTransaction {
 
 /// Get the balance of a wallet.
 #[derive(Debug, Serialize, Deserialize)]
-pub struct GetWalletBalance {
+pub struct GetWalletBalanceInput {
     /// The wallet address.
     pub address: String,
+}
+
+/// Get a list of transactions of a wallet.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GetWalletTransactionInput {
+    /// The wallet address.
+    pub address: String,
+
+    /// The page number.
+    pub page: usize,
+
+    /// The page size.
+    pub size: usize,
+}
+
+/// Get a list of transactions of a wallet.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GetTransactionsInput {
+    /// The page number.
+    pub page: usize,
+
+    /// The page size.
+    pub size: usize,
 }
 
 /// Create a new wallet.
 ///
 /// # Arguments
 ///
-/// * `state` - The application state.
-/// * `body` - The request body.
+/// - `state` - The application state.
+/// - `body` - The request body.
 ///
 /// # Returns
 ///
 /// A new wallet address.
 pub async fn create_wallet(
     State(state): State<AppState>,
-    Json(body): Json<CreateWallet>,
+    Json(body): Json<CreateWalletInput>,
 ) -> impl IntoResponse {
     let mut chain = state.chain.lock().unwrap();
     let address = chain.create_wallet(body.email);
@@ -68,15 +91,15 @@ pub async fn create_wallet(
 ///
 /// # Arguments
 ///
-/// * `state` - The application state.
-/// * `params` - The request query parameters.
+/// - `state` - The application state.
+/// - `params` - The request query parameters.
 ///
 /// # Returns
 ///
 /// The balance of the wallet.
 pub async fn get_wallet_balance(
     State(state): State<AppState>,
-    Query(params): Query<GetWalletBalance>,
+    Query(params): Query<GetWalletBalanceInput>,
 ) -> impl IntoResponse {
     let chain = state.chain.lock().unwrap();
     let balance = chain.get_wallet_balance(params.address);
@@ -94,18 +117,18 @@ pub async fn get_wallet_balance(
 ///
 /// # Arguments
 ///
-/// * `state` - The application state.
-/// * `params` - The request query parameters.
+/// - `state` - The application state.
+/// - `params` - The request query parameters.
 ///
 /// # Returns
 ///
 /// The list of transactions of the wallet.
 pub async fn get_wallet_transactions(
     State(state): State<AppState>,
-    Query(params): Query<GetWalletBalance>,
+    Query(params): Query<GetWalletTransactionInput>,
 ) -> impl IntoResponse {
     let chain = state.chain.lock().unwrap();
-    let transaction = chain.get_wallet_transactions(params.address);
+    let transaction = chain.get_wallet_transactions(params.address, params.page, params.size);
 
     match transaction {
         Some(transaction) => (StatusCode::OK, Json(json!({ "data": transaction }))),
@@ -120,14 +143,18 @@ pub async fn get_wallet_transactions(
 ///
 /// # Arguments
 ///
-/// * `state` - The application state.
+/// - `state` - The application state.
+/// - `params` - The request query parameters.
 ///
 /// # Returns
 ///
 /// All transactions.
-pub async fn get_transactions(State(state): State<AppState>) -> impl IntoResponse {
-    let mut chain = state.chain.lock().unwrap();
-    let transactions = chain.get_transactions();
+pub async fn get_transactions(
+    State(state): State<AppState>,
+    Query(params): Query<GetTransactionsInput>,
+) -> impl IntoResponse {
+    let chain = state.chain.lock().unwrap();
+    let transactions = chain.get_transactions(params.page, params.size);
 
     (StatusCode::OK, Json(json!({ "data": transactions })))
 }
@@ -136,8 +163,8 @@ pub async fn get_transactions(State(state): State<AppState>) -> impl IntoRespons
 ///
 /// # Arguments
 ///
-/// * `state` - The application state.
-/// * `hash` - The transaction hash.
+/// - `state` - The application state.
+/// - `hash` - The transaction hash.
 ///
 /// # Returns
 ///
@@ -162,15 +189,15 @@ pub async fn get_transaction(
 ///
 /// # Arguments
 ///
-/// * `state` - The application state.
-/// * `body` - The request body.
+/// - `state` - The application state.
+/// - `body` - The request body.
 ///
 /// # Returns
 ///
 /// The new transaction.
 pub async fn add_transaction(
     State(state): State<AppState>,
-    Json(body): Json<AddTransaction>,
+    Json(body): Json<AddTransactionInput>,
 ) -> impl IntoResponse {
     let mut chain = state.chain.lock().unwrap();
 

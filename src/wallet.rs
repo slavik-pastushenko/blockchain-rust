@@ -21,9 +21,9 @@ impl Wallet {
     ///
     /// # Arguments
     ///
-    /// * `email` - The email address associated with the wallet.
-    /// * `address` - The address uniquely identifying the wallet.
-    /// * `balance` - The current balance of the wallet.
+    /// - `email` - The email address associated with the wallet.
+    /// - `address` - The address uniquely identifying the wallet.
+    /// - `balance` - The current balance of the wallet.
     ///
     /// # Returns
     ///

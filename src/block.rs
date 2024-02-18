@@ -40,8 +40,8 @@ impl Block {
     ///
     /// # Arguments
     ///
-    /// * `previous_hash` - The hash of the previous block.
-    /// * `difficulty` - The difficulty level of the network.
+    /// - `previous_hash` - The hash of the previous block.
+    /// - `difficulty` - The difficulty level of the network.
     ///
     /// # Returns
     ///

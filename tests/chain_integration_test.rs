@@ -154,7 +154,7 @@ fn test_get_transactions() {
     chain.add_transaction(from.clone(), to.clone(), 10.0);
     chain.add_transaction(to.clone(), from.clone(), 20.0);
 
-    let transactions = chain.get_transactions();
+    let transactions = chain.get_transactions(0, 10);
 
     assert_eq!(transactions.len(), 2);
     assert_eq!(transactions[0].from, from);
@@ -163,9 +163,18 @@ fn test_get_transactions() {
 
 #[test]
 fn test_get_transactions_not_found() {
-    let mut chain = setup();
+    let chain = setup();
 
-    let transactions = chain.get_transactions();
+    let transactions = chain.get_transactions(0, 10);
+
+    assert!(transactions.is_empty());
+}
+
+#[test]
+fn test_get_transactions_empty_page() {
+    let chain = setup();
+
+    let transactions = chain.get_transactions(10, 10);
 
     assert!(transactions.is_empty());
 }
@@ -210,7 +219,7 @@ fn test_get_wallet_transactions() {
 
     chain.add_transaction(from.clone(), to.clone(), 10.0);
 
-    let transactions = chain.get_wallet_transactions(from).unwrap();
+    let transactions = chain.get_wallet_transactions(from, 0, 10).unwrap();
 
     assert!(!transactions.is_empty());
 }
@@ -221,7 +230,7 @@ fn test_get_new_wallet_transactions() {
 
     let from = chain.create_wallet("s@mail.com".to_string());
 
-    let transactions = chain.get_wallet_transactions(from).unwrap();
+    let transactions = chain.get_wallet_transactions(from, 0, 10).unwrap();
 
     assert!(transactions.is_empty());
 }
@@ -230,7 +239,16 @@ fn test_get_new_wallet_transactions() {
 fn test_get_wallet_transactions_not_found() {
     let chain = setup();
 
-    let transactions = chain.get_wallet_transactions("address".to_string());
+    let transactions = chain.get_wallet_transactions("address".to_string(), 0, 10);
+
+    assert!(transactions.is_none());
+}
+
+#[test]
+fn test_get_wallet_transactions_empty_page() {
+    let chain = setup();
+
+    let transactions = chain.get_wallet_transactions("address".to_string(), 10, 10);
 
     assert!(transactions.is_none());
 }
