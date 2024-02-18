@@ -1,13 +1,15 @@
-use crate::handlers::AppState;
+use std::{
+    net::SocketAddr,
+    sync::{Arc, Mutex},
+};
+
 use axum::{
     routing::{get, post},
     Router,
 };
 use blockchain::Chain;
-use std::{
-    net::SocketAddr,
-    sync::{Arc, Mutex},
-};
+
+use crate::handlers::AppState;
 
 mod handlers;
 
