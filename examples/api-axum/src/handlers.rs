@@ -81,14 +81,39 @@ pub async fn get_wallet_balance(
     let chain = state.chain.lock().unwrap();
     let balance = chain.get_wallet_balance(params.address);
 
-    if balance.is_none() {
-        return (
+    match balance {
+        Some(balance) => (StatusCode::OK, Json(json!({ "data": balance }))),
+        None => (
             StatusCode::NOT_FOUND,
             Json(json!({ "message": "Wallet is not found" })),
-        );
+        ),
     }
+}
 
-    (StatusCode::OK, Json(json!({ "data": balance })))
+/// Get a list of transactions of a wallet.
+///
+/// # Arguments
+///
+/// * `state` - The application state.
+/// * `params` - The request query parameters.
+///
+/// # Returns
+///
+/// The list of transactions of the wallet.
+pub async fn get_wallet_transactions(
+    State(state): State<AppState>,
+    Query(params): Query<GetWalletBalance>,
+) -> impl IntoResponse {
+    let chain = state.chain.lock().unwrap();
+    let transaction = chain.get_wallet_transactions(params.address);
+
+    match transaction {
+        Some(transaction) => (StatusCode::OK, Json(json!({ "data": transaction }))),
+        None => (
+            StatusCode::NOT_FOUND,
+            Json(json!({ "message": "Wallet is not found" })),
+        ),
+    }
 }
 
 /// Get all transactions.
@@ -124,14 +149,13 @@ pub async fn get_transaction(
     let chain = state.chain.lock().unwrap();
     let transaction = chain.get_transaction(hash);
 
-    if transaction.is_none() {
-        return (
+    match transaction {
+        Some(transaction) => (StatusCode::OK, Json(json!({ "data": transaction }))),
+        None => (
             StatusCode::NOT_FOUND,
             Json(json!({ "message": "Transaction is not found" })),
-        );
+        ),
     }
-
-    (StatusCode::OK, Json(json!({ "data": transaction })))
 }
 
 /// Add a new transaction.

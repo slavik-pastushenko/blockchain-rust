@@ -22,6 +22,7 @@ A Rust crate provides an interface for interacting with a blockchain.
 - `validate_transaction(from, amount)`: Validate a new transaction to the blockchain.
 - `create_wallet(email)`: Create a new wallet with a unique email and an initial balance.
 - `get_wallet_balance(address)`: Get a wallet's balance based on its address.
+- `get_wallet_transactions(address)`: Get a wallet's transaction history based on its address.
 - `get_last_hash()`: Get the hash of the last block in the blockchain.
 - `update_difficulty(difficulty)`: Update the mining difficulty of the blockchain.
 - `update_reward(reward)`: Update the block reward.

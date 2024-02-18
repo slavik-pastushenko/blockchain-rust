@@ -90,17 +90,19 @@ impl Chain {
     pub fn add_transaction(&mut self, from: String, to: String, amount: f64) -> bool {
         let total = amount * self.fee;
 
-        // Validate the transaction
-        if !self.validate_transaction(&from, &to, total) {
-            return false;
-        }
+        // Validate the transaction and create a new transaction if it is valid
+        let transaction = match self.validate_transaction(&from, &to, total) {
+            true => Transaction::new(from.to_owned(), to.to_owned(), self.fee, total),
+            false => return false,
+        };
 
         // Update sender's balance
         match self.wallets.get_mut(&from) {
             Some(wallet) => {
                 wallet.balance -= total;
 
-                wallet
+                // Add the transaction to the sender's transaction history
+                wallet.transactions.push(transaction.hash.to_owned());
             }
             None => return false,
         };
@@ -110,13 +112,11 @@ impl Chain {
             Some(wallet) => {
                 wallet.balance += amount;
 
-                wallet
+                // Add the transaction to the receiver's transaction history
+                wallet.transactions.push(transaction.hash.to_owned());
             }
             None => return false,
         };
-
-        // Create a transaction
-        let transaction = Transaction::new(from, to, self.fee, total);
 
         // Add the transaction to the current transactions
         self.current_transactions.push(transaction);
@@ -194,6 +194,37 @@ impl Chain {
     /// The wallet balance.
     pub fn get_wallet_balance(&self, address: String) -> Option<f64> {
         self.wallets.get(&address).map(|wallet| wallet.balance)
+    }
+
+    /// Get a wallet's transaction history based on its address.
+    ///
+    /// # Arguments
+    /// - `address`: The unique wallet address.
+    ///
+    /// # Returns
+    /// The wallet transaction history.
+    pub fn get_wallet_transactions(&self, address: String) -> Option<Vec<Transaction>> {
+        match self
+            .wallets
+            .get(&address)
+            .map(|wallet| wallet.transactions.to_owned())
+        {
+            // Get the transaction history of the wallet
+            Some(txs) => {
+                let mut result = Vec::new();
+
+                for tx in txs {
+                    match self.get_transaction(tx) {
+                        Some(transaction) => result.push(transaction.to_owned()),
+                        None => continue,
+                    }
+                }
+
+                Some(result)
+            }
+            // Return None if the wallet is not found
+            None => None,
+        }
     }
 
     /// Get the hash of the last block in the blockchain.

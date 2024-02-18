@@ -199,6 +199,43 @@ fn test_get_wallet_balance_not_found() {
 }
 
 #[test]
+fn test_get_wallet_transactions() {
+    let mut chain = setup();
+
+    let from = chain.create_wallet("s@mail.com".to_string());
+    let to = chain.create_wallet("r@mail.com".to_string());
+
+    let sender = chain.wallets.get_mut(&from).unwrap();
+    sender.balance += 20.0;
+
+    chain.add_transaction(from.clone(), to.clone(), 10.0);
+
+    let transactions = chain.get_wallet_transactions(from).unwrap();
+
+    assert!(!transactions.is_empty());
+}
+
+#[test]
+fn test_get_new_wallet_transactions() {
+    let mut chain = setup();
+
+    let from = chain.create_wallet("s@mail.com".to_string());
+
+    let transactions = chain.get_wallet_transactions(from).unwrap();
+
+    assert!(transactions.is_empty());
+}
+
+#[test]
+fn test_get_wallet_transactions_not_found() {
+    let chain = setup();
+
+    let transactions = chain.get_wallet_transactions("address".to_string());
+
+    assert!(transactions.is_none());
+}
+
+#[test]
 fn test_get_last_hash() {
     let chain = setup();
     let hash = chain.get_last_hash();

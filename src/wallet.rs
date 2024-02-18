@@ -11,6 +11,9 @@ pub struct Wallet {
 
     /// The current balance of the wallet.
     pub balance: f64,
+
+    /// A history of transactions associated with the wallet.
+    pub transactions: Vec<String>,
 }
 
 impl Wallet {
@@ -30,6 +33,7 @@ impl Wallet {
             email,
             address,
             balance,
+            transactions: vec![],
         }
     }
 }
@@ -48,5 +52,6 @@ mod tests {
         assert_eq!(wallet.email, email);
         assert_eq!(wallet.address, address);
         assert_eq!(wallet.balance, balance);
+        assert!(wallet.transactions.is_empty());
     }
 }

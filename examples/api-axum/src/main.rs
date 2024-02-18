@@ -26,6 +26,10 @@ async fn main() {
         .route("/transactions", get(handlers::get_transactions))
         .route("/transactions", post(handlers::add_transaction))
         .route("/wallet/balance", get(handlers::get_wallet_balance))
+        .route(
+            "/wallet/transactions",
+            get(handlers::get_wallet_transactions),
+        )
         .route("/wallet/create", post(handlers::create_wallet))
         .with_state(state);
 

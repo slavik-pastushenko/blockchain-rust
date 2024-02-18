@@ -53,6 +53,11 @@ fn main() -> std::io::Result<()> {
             .initial_value("add_transaction")
             .item("create_wallet", "Create a new wallet", "")
             .item("get_wallet_balance", "Get a wallet balance", "")
+            .item(
+                "get_wallet_transactions",
+                "Get a wallet transaction history",
+                "",
+            )
             .item("add_transaction", "Add a new transaction", "")
             .item("get_transaction", "Get a transaction", "")
             .item("get_transactions", "Get all transactions", "")
@@ -96,9 +101,27 @@ fn main() -> std::io::Result<()> {
 
                 let balance = chain.get_wallet_balance(address);
 
-                match balance.is_some() {
-                    true => println!("✅ Wallet balance: {}", balance.unwrap()),
-                    false => println!("❌ Cannot find a wallet"),
+                match balance {
+                    Some(balance) => println!("✅ Wallet balance: {}", balance),
+                    None => println!("❌ Cannot find a wallet"),
+                }
+            }
+            "get_wallet_transactions" => {
+                let address: String = cliclack::input("Address")
+                    .validate(|input: &String| {
+                        if input.is_empty() {
+                            Err("Please enter an address")
+                        } else {
+                            Ok(())
+                        }
+                    })
+                    .interact()?;
+
+                let transactions = chain.get_wallet_transactions(address);
+
+                match transactions {
+                    Some(transactions) => println!("✅ Wallet transactions: {:?}", transactions),
+                    None => println!("❌ Cannot find a wallet"),
                 }
             }
             "add_transaction" => {
