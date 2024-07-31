@@ -173,7 +173,7 @@ impl Chain {
         };
 
         // Validate if the receiver address is valid
-        if self.wallets.get(to).is_none() {
+        if !self.wallets.contains_key(to) {
             return false;
         }
 
